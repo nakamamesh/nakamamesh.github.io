@@ -3,375 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NakamaMesh Whitepaper - Unstoppable Communication Network</title>
-    <meta name="description" content="Complete technical whitepaper for NakamaMesh - the world's first truly unstoppable decentralized mesh communication network.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>NakamaMesh Whitepaper - Unstoppable Communication for Everyone</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        :root {
-            --primary: #FF4500;
-            --secondary: #00D9FF;
-            --dark: #0A0E27;
-            --light: #F8F9FA;
-            --accent: #FFD700;
-            --text: #2C3E50;
-            --text-light: #6B7280;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.125rem;
-            line-height: 1.8;
-            color: var(--text);
-            background: var(--light);
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--dark) 0%, #1A1F3A 100%);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            border-bottom: 4px solid var(--primary);
-        }
-
-        .header h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
-
-        .header .subtitle {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-
-        .header .meta {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.875rem;
-            opacity: 0.7;
-        }
-
-        .quote-hero {
-            background: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        .quote-hero blockquote {
-            font-size: 1.5rem;
-            font-style: italic;
-            max-width: 800px;
-            margin: 0 auto 1rem;
-            color: var(--primary);
-        }
-
-        .quote-hero cite {
-            font-size: 1rem;
-            font-style: normal;
-            color: var(--text-light);
-        }
-
-        .container {
+        .whitepaper-container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 40px 20px;
             background: white;
+            line-height: 1.8;
         }
-
-        .toc {
-            background: #F9FAFB;
-            padding: 2rem;
+        
+        .whitepaper-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #00d4ff;
+        }
+        
+        .whitepaper-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        
+        .whitepaper-header .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+        
+        .whitepaper-header .quote {
+            font-style: italic;
+            font-size: 1.1em;
+            color: #444;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .whitepaper-header .version {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+        
+        .table-of-contents {
+            background: #f9f9f9;
+            padding: 30px;
+            margin: 40px 0;
             border-radius: 8px;
-            border-left: 4px solid var(--secondary);
-            margin-bottom: 4rem;
+            border: 1px solid #ddd;
         }
-
-        .toc h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
+        
+        .table-of-contents h2 {
+            margin-top: 0;
+            color: #1a1a1a;
         }
-
-        .toc ol {
-            list-style-position: inside;
-            line-height: 2;
+        
+        .table-of-contents ol {
+            counter-reset: item;
+            list-style: none;
+            padding-left: 0;
         }
-
-        .toc a {
-            color: var(--text);
+        
+        .table-of-contents li {
+            counter-increment: item;
+            margin: 8px 0;
+        }
+        
+        .table-of-contents li:before {
+            content: counters(item, ".") ". ";
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .table-of-contents a {
+            color: #333;
             text-decoration: none;
             transition: color 0.3s;
         }
-
-        .toc a:hover {
-            color: var(--primary);
+        
+        .table-of-contents a:hover {
+            color: #00d4ff;
         }
-
+        
         .section {
-            margin-bottom: 4rem;
+            margin: 60px 0;
+            padding-top: 20px;
         }
-
+        
         .section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid var(--primary);
+            font-size: 2em;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00d4ff;
         }
-
+        
         .section h3 {
-            font-size: 1.75rem;
-            margin: 2rem 0 1rem;
-            color: var(--dark);
+            font-size: 1.5em;
+            color: #333;
+            margin: 30px 0 15px 0;
         }
-
+        
         .section h4 {
-            font-size: 1.25rem;
-            margin: 1.5rem 0 0.75rem;
-            color: var(--text);
-            font-weight: 600;
+            font-size: 1.2em;
+            color: #444;
+            margin: 20px 0 10px 0;
         }
-
+        
         .section p {
-            margin-bottom: 1.5rem;
+            margin: 15px 0;
+            color: #333;
         }
-
-        .section ul,
-        .section ol {
-            margin: 1rem 0 1.5rem 2rem;
+        
+        .section ul, .section ol {
+            margin: 15px 0;
+            padding-left: 30px;
         }
-
+        
         .section li {
-            margin-bottom: 0.75rem;
+            margin: 8px 0;
+            color: #333;
         }
-
+        
         .highlight-box {
-            background: linear-gradient(135deg, #FFF5F5 0%, #FFF 100%);
-            border-left: 4px solid var(--primary);
-            padding: 1.5rem;
-            margin: 2rem 0;
+            background: #f0f9ff;
+            border-left: 4px solid #00d4ff;
+            padding: 20px;
+            margin: 20px 0;
             border-radius: 4px;
         }
-
-        .highlight-box strong {
-            color: var(--primary);
+        
+        .quote-box {
+            font-style: italic;
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #00d4ff;
+            color: #444;
         }
-
-        .info-box {
-            background: linear-gradient(135deg, #F0F9FF 0%, #FFF 100%);
-            border-left: 4px solid var(--secondary);
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 4px;
-        }
-
-        table {
+        
+        .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 2rem 0;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            margin: 20px 0;
         }
-
-        table th {
-            background: var(--dark);
-            color: white;
-            padding: 1rem;
+        
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
-            font-weight: 600;
         }
-
-        table td {
-            padding: 1rem;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        table tr:hover {
-            background: #F9FAFB;
-        }
-
-        .contract-address {
-            background: var(--dark);
+        
+        .comparison-table th {
+            background: #00d4ff;
             color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            font-family: 'Inter', monospace;
-            word-break: break-all;
-            text-align: center;
+            font-weight: bold;
         }
-
-        .contract-address strong {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
         }
-
-        .roadmap-phase {
-            background: white;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
+        
+        .checkmark {
+            color: #00d900;
+            font-weight: bold;
         }
-
-        .roadmap-phase h4 {
-            color: var(--primary);
-            margin-top: 0;
+        
+        .crossmark {
+            color: #ff0000;
+            font-weight: bold;
         }
-
-        .roadmap-phase.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #FFF5F5 0%, #FFF 100%);
+        
+        .status-complete {
+            color: #00d900;
         }
-
-        .disclaimer {
-            background: #FEF2F2;
-            border: 2px solid #EF4444;
-            padding: 2rem;
-            border-radius: 8px;
-            margin: 3rem 0;
-            font-size: 0.95rem;
+        
+        .status-progress {
+            color: #ff9900;
         }
-
-        .disclaimer h3 {
-            color: #DC2626;
-            margin-top: 0;
-        }
-
-        .footer {
-            background: var(--dark);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .footer a {
-            color: var(--secondary);
-            text-decoration: none;
-        }
-
+        
         .back-to-top {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--primary);
+            bottom: 30px;
+            right: 30px;
+            background: #00d4ff;
             color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 15px 20px;
+            border-radius: 50px;
             text-decoration: none;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
         }
-
+        
         .back-to-top:hover {
-            transform: translateY(-4px);
+            background: #00b8e6;
+            transform: translateY(-3px);
         }
-
-        @media print {
-            .back-to-top { display: none; }
-            .header { page-break-after: avoid; }
-            .section { page-break-inside: avoid; }
-        }
-
+        
         @media (max-width: 768px) {
-            .container {
-                padding: 2rem 1rem;
+            .whitepaper-container {
+                padding: 20px 15px;
             }
-            .header h1 {
-                font-size: 2rem;
+            
+            .whitepaper-header h1 {
+                font-size: 1.8em;
             }
+            
             .section h2 {
-                font-size: 2rem;
+                font-size: 1.5em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>NAKAMAMESH NETWORK</h1>
-        <p class="subtitle">Unstoppable Communication for Everyone, Everywhere</p>
-        <p>A Decentralized Physical Infrastructure Network (DePIN)<br>
-        Powered by Community, Built for Humanity</p>
-        <p class="meta">Version 1.0 | December 2025</p>
-    </div>
+    <div class="whitepaper-container">
+        <div class="whitepaper-header">
+            <h1>NAKAMAMESH NETWORK</h1>
+            <p class="subtitle">Unstoppable Communication for Everyone, Everywhere</p>
+            <p class="subtitle">A Decentralized Physical Infrastructure Network (DePIN)</p>
+            <p class="subtitle">Powered by Community, Built for Humanity</p>
+            <div class="quote">
+                "We can either do something to make this a better world, or we can do nothing. I choose to do something."
+                <br><strong>— Founder's Mother</strong>
+            </div>
+            <p class="version">Version 1.0 | December 2025</p>
+        </div>
 
-    <div class="quote-hero">
-        <blockquote>"We can either do something to make this a better world, or we can do nothing. I choose to do something."</blockquote>
-        <cite>— Zita, Founder's Mother</cite>
-    </div>
-
-    <div class="container">
-        <div class="toc">
-            <h2>Table of Contents</h2>
+        <div class="table-of-contents">
+            <h2>TABLE OF CONTENTS</h2>
             <ol>
-                <li><a href="#executive-summary">Executive Summary</a></li>
-                <li><a href="#personal-mission">A Personal Mission</a></li>
-                <li><a href="#problem">The Problem We Solve</a></li>
-                <li><a href="#solution">The NakamaMesh Solution</a></li>
-                <li><a href="#how-it-works">How It Works Today</a></li>
-                <li><a href="#technology">Technology Architecture</a></li>
-                <li><a href="#tokenomics">Tokenomics & Incentives</a></li>
-                <li><a href="#earn">Earn by Participating</a></li>
-                <li><a href="#use-cases">Use Cases: Real Impact</a></li>
-                <li><a href="#roadmap">Roadmap to Global Coverage</a></li>
-                <li><a href="#open-source">Open Source & Developer Ecosystem</a></li>
-                <li><a href="#team">Team & Vision</a></li>
-                <li><a href="#call-to-action">Call to Action: Join Us</a></li>
+                <li><a href="#section1">Executive Summary</a></li>
+                <li><a href="#section2">A Personal Mission</a></li>
+                <li><a href="#section3">The Problem We Solve</a></li>
+                <li><a href="#section4">The NakamaMesh Solution</a></li>
+                <li><a href="#section5">How It Works Today</a></li>
+                <li><a href="#section6">Technology Architecture</a></li>
+                <li><a href="#section7">Tokenomics & Incentives</a></li>
+                <li><a href="#section8">Earn by Participating</a></li>
+                <li><a href="#section9">Use Cases: Real Impact</a></li>
+                <li><a href="#section10">Roadmap to Global Coverage</a></li>
+                <li><a href="#section11">Open Source & Developer Ecosystem</a></li>
+                <li><a href="#section12">Team & Vision</a></li>
+                <li><a href="#section13">Call to Action: Join Us</a></li>
             </ol>
         </div>
 
-        <div id="executive-summary" class="section">
-            <h2>1. Executive Summary</h2>
-            
+        <div id="section1" class="section">
+            <h2>1. EXECUTIVE SUMMARY</h2>
             <p><strong>NakamaMesh is building the world's first truly unstoppable communication network.</strong></p>
-            
             <p>When typhoons destroy cell towers, when governments shut down the internet, when disasters strike - NakamaMesh keeps communities connected.</p>
-            
             <p>We're not just building an app. We're building infrastructure owned by the people, operated by the people, and beneficial to everyone.</p>
             
             <h3>What makes NakamaMesh different:</h3>
             <ul>
                 <li><strong>Works without internet:</strong> Pure phone-to-phone mesh via Bluetooth (working NOW)</li>
-                <li><strong>Economically sustainable:</strong> Earn $NKMA cryptocurrency by running relays (coming Q1 2026)</li>
+                <li><strong>Economically sustainable:</strong> Earn $NKMA cryptocurrency by running relays (coming Q2 2026)</li>
                 <li><strong>Disaster-resilient:</strong> Functions when ALL infrastructure fails</li>
                 <li><strong>Globally scalable:</strong> Roadmap from Bluetooth → LoRa → Satellite time → Own constellation</li>
                 <li><strong>Community-owned:</strong> 100% open source, decentralized governance</li>
                 <li><strong>Accessible to all:</strong> Works on your existing phone right now</li>
             </ul>
-            
+
             <div class="highlight-box">
                 <p><strong>Our Vision:</strong> A global communication network that works for everyone, everywhere, always - powered by people helping people.</p>
             </div>
-            
+
             <h3>Current Status:</h3>
             <ul>
-                <li>✅ Android app deployed and operational</li>
-                <li>✅ NKMA token live on Binance Smart Chain (100B minted)</li>
-                <li>✅ Pure Bluetooth mesh working (no internet needed!)</li>
-                <li>✅ End-to-end encryption functional</li>
-                <li>✅ Multi-hop relay operational</li>
-                <li>⏳ Wallet integration coming Q1 2026</li>
-                <li>⏳ All code being open sourced</li>
-                <li>⏳ Whitepaper and website launching</li>
+                <li><span class="status-complete">✅</span> Android app deployed and operational</li>
+                <li><span class="status-complete">✅</span> NKMA token live on Binance Smart Chain (100B minted)</li>
+                <li><span class="status-complete">✅</span> Pure Bluetooth mesh working (no internet needed!)</li>
+                <li><span class="status-complete">✅</span> End-to-end encryption functional</li>
+                <li><span class="status-complete">✅</span> Multi-hop relay operational</li>
+                <li><span class="status-progress">⏳</span> Wallet integration coming Q1 2026</li>
+                <li><span class="status-progress">⏳</span> All code being open sourced</li>
+                <li><span class="status-progress">⏳</span> Whitepaper and website launching</li>
             </ul>
-            
+
             <h3>The Opportunity:</h3>
             <ul>
                 <li>5 billion smartphone users globally</li>
@@ -379,47 +292,33 @@
                 <li>Billions affected by natural disasters annually</li>
                 <li>Growing demand for censorship-resistant communication</li>
             </ul>
-            
+
             <p><strong>Join us in building a network that can never be shut down.</strong></p>
         </div>
 
-        <div id="personal-mission" class="section">
-            <h2>2. A Personal Mission</h2>
-            
+        <div id="section2" class="section">
+            <h2>2. A PERSONAL MISSION</h2>
             <p><strong>This isn't just a business. It's personal.</strong></p>
-            
             <p>My mother was born in the Philippines. She raised me in the United States with one unwavering principle:</p>
-            
-            <blockquote style="font-style: italic; font-size: 1.3rem; border-left: 4px solid var(--primary); padding-left: 1.5rem; margin: 2rem 0; color: var(--primary);">
+            <div class="quote-box">
                 "We can either do something to make this a better world, or we can do nothing."
-            </blockquote>
-            
+            </div>
             <p>She passed away, but her words stayed with me.</p>
-            
             <p>In 2025, I watched helplessly as typhoons devastated the Philippines. Communities were cut off. Families couldn't reach each other. Cell towers were destroyed. Internet cables underwater.</p>
-            
             <p>People suffered not just from the storm, but from the silence that followed.</p>
-            
             <p>I thought about my mother's words. I thought about her homeland. I thought about millions of people worldwide facing the same isolation during disasters.</p>
-            
             <p><strong>I chose to do something.</strong></p>
-            
             <p>NakamaMesh was born from that choice.</p>
-            
             <p>This is for every Filipino family separated by typhoons. For every community cut off by floods. For every protester silenced by internet shutdowns. For every hiker lost in the wilderness. For every human being who deserves the basic right to communicate.</p>
-            
             <p>My mother taught me that one person can make a difference when they choose to act.</p>
-            
             <p><strong>Today, I'm asking you to make that choice with me.</strong></p>
         </div>
 
-        <div id="problem" class="section">
-            <h2>3. The Problem We Solve</h2>
-            
+        <div id="section3" class="section">
+            <h2>3. THE PROBLEM WE SOLVE</h2>
             <h3>Communication Fails When We Need It Most</h3>
             
             <h4>The Fragility of Centralized Infrastructure:</h4>
-            
             <p>Modern communication depends on centralized infrastructure:</p>
             <ul>
                 <li>Cell towers require electricity</li>
@@ -428,41 +327,34 @@
                 <li>Governments can shut down networks</li>
                 <li>Companies can censor messages</li>
             </ul>
-            
             <p><strong>When disaster strikes, this house of cards collapses.</strong></p>
-            
+
             <h4>Real Examples:</h4>
             
-            <div class="info-box">
-                <strong>Typhoon Haiyan (Philippines, 2013):</strong>
-                <ul style="margin-top: 0.5rem;">
-                    <li>6,300 people killed</li>
-                    <li>90% of telecommunications infrastructure destroyed</li>
-                    <li>Families separated with no way to communicate</li>
-                    <li>Rescue coordination crippled</li>
-                </ul>
-            </div>
-            
-            <div class="info-box">
-                <strong>Myanmar Coup (2021):</strong>
-                <ul style="margin-top: 0.5rem;">
-                    <li>Government shut down internet nationwide</li>
-                    <li>Protesters unable to coordinate</li>
-                    <li>International community cut off from information</li>
-                    <li>Communication became a crime</li>
-                </ul>
-            </div>
-            
-            <div class="info-box">
-                <strong>Hurricane Maria (Puerto Rico, 2017):</strong>
-                <ul style="margin-top: 0.5rem;">
-                    <li>95% of cell towers destroyed</li>
-                    <li>Some areas without communication for 6+ months</li>
-                    <li>Elderly and vulnerable populations isolated</li>
-                    <li>Disaster response severely hampered</li>
-                </ul>
-            </div>
-            
+            <p><strong>Typhoon Haiyan (Philippines, 2013):</strong></p>
+            <ul>
+                <li>6,300 people killed</li>
+                <li>90% of telecommunications infrastructure destroyed</li>
+                <li>Families separated with no way to communicate</li>
+                <li>Rescue coordination crippled</li>
+            </ul>
+
+            <p><strong>Myanmar Coup (2021):</strong></p>
+            <ul>
+                <li>Government shut down internet nationwide</li>
+                <li>Protesters unable to coordinate</li>
+                <li>International community cut off from information</li>
+                <li>Communication became a crime</li>
+            </ul>
+
+            <p><strong>Hurricane Maria (Puerto Rico, 2017):</strong></p>
+            <ul>
+                <li>95% of cell towers destroyed</li>
+                <li>Some areas without communication for 6+ months</li>
+                <li>Elderly and vulnerable populations isolated</li>
+                <li>Disaster response severely hampered</li>
+            </ul>
+
             <h4>The Underserved Billions:</h4>
             <ul>
                 <li>1.7 billion people lack reliable internet access</li>
@@ -470,9 +362,8 @@
                 <li>Disaster zones grow every year due to climate change</li>
                 <li>Privacy-conscious users have no alternatives</li>
             </ul>
-            
+
             <h4>The Cost of Silence:</h4>
-            
             <p>When communication fails:</p>
             <ul>
                 <li>Families can't find each other</li>
@@ -481,21 +372,17 @@
                 <li>Communities fracture</li>
                 <li>Lives are lost</li>
             </ul>
-            
-            <div class="highlight-box">
-                <p><strong>We can do better. We must do better.</strong></p>
-            </div>
+
+            <p><strong>We can do better. We must do better.</strong></p>
         </div>
 
-        <div id="solution" class="section">
-            <h2>4. The NakamaMesh Solution</h2>
-            
+        <div id="section4" class="section">
+            <h2>4. THE NAKAMAMESH SOLUTION</h2>
             <h3>A Network That Works When Nothing Else Does</h3>
             
             <p>NakamaMesh creates a parallel communication infrastructure that doesn't depend on centralized systems.</p>
-            
+
             <h4>Core Principles:</h4>
-            
             <ol>
                 <li><strong>Decentralized Physical Infrastructure (DePIN)</strong><br>No single point of failure. The network exists wherever people are.</li>
                 <li><strong>Economic Sustainability</strong><br>Participants earn cryptocurrency by helping others communicate. Self-funding, self-sustaining.</li>
@@ -503,19 +390,17 @@
                 <li><strong>Hybrid Architecture</strong><br>Works with or without existing infrastructure. Adapts to any situation.</li>
                 <li><strong>Progressive Expansion</strong><br>Start local, grow regional, achieve global coverage through community deployment.</li>
             </ol>
-            
+
             <h4>How It's Different:</h4>
             
-            <div class="info-box">
-                <p><strong>Traditional Networks:</strong><br>
-                Your Phone → Cell Tower → Internet → Server → Recipient<br>
-                <em>Breaks if ANY link fails</em></p>
-                
-                <p style="margin-top: 1rem;"><strong>NakamaMesh:</strong><br>
-                Your Phone → Nearby Phone → Nearby Phone → Recipient<br>
-                <em>Messages hop phone-to-phone via Bluetooth. No towers, no internet, no servers. Period.</em></p>
-            </div>
-            
+            <p><strong>Traditional Networks:</strong></p>
+            <p>Your Phone → Cell Tower → Internet → Server → Recipient<br>
+            <em>Breaks if ANY link fails</em></p>
+
+            <p><strong>NakamaMesh:</strong></p>
+            <p>Your Phone → Nearby Phone → Nearby Phone → Recipient<br>
+            <em>Messages hop phone-to-phone via Bluetooth. No towers, no internet, no servers. Period.</em></p>
+
             <h4>Operating Modes:</h4>
             
             <p><strong>Mode 1: Pure Bluetooth Mesh (Available Today)</strong></p>
@@ -527,7 +412,7 @@
                 <li>True peer-to-peer communication</li>
                 <li>No internet, no servers, no centralized control</li>
             </ul>
-            
+
             <p><strong>Mode 2: Extended Range Mesh (Coming 2026)</strong></p>
             <ul>
                 <li>LoRa relay nodes extend range to 15 kilometers</li>
@@ -535,121 +420,792 @@
                 <li>Same pure mesh architecture, just longer hops</li>
                 <li>Still NO internet dependency</li>
             </ul>
-            
+
             <p><strong>Mode 3: Satellite-Augmented (2027+)</strong></p>
             <ul>
                 <li>Ground mesh + purchased satellite time</li>
                 <li>Global coverage including oceans/deserts</li>
                 <li>Messages relay through satellites when no ground path available</li>
                 <li>Still peer-to-peer architecture, satellites are just very high relays</li>
+                <li>Progressive deployment as network grows</li>
             </ul>
-            
+
             <h4>The NakamaMesh Difference:</h4>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Traditional Messaging</th>
-                        <th>NakamaMesh</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Works without internet</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>Phone-to-phone relay</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>Disaster-resilient</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>Mobile relays</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>Works NOW</td>
-                        <td>✅</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>Earn crypto rewards</td>
-                        <td>❌</td>
-                        <td>✅ (Q1 2026)</td>
-                    </tr>
-                    <tr>
-                        <td>Open source</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                    <tr>
-                        <td>No servers required</td>
-                        <td>❌</td>
-                        <td>✅</td>
-                    </tr>
-                </tbody>
+            <table class="comparison-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Traditional Messaging</th>
+                    <th>NakamaMesh</th>
+                </tr>
+                <tr>
+                    <td>Works without internet</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>Phone-to-phone relay</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>Disaster-resilient</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>Mobile relays</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>Works NOW (not promised)</td>
+                    <td class="checkmark">✅</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>Earn crypto rewards</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅ (Q1 2026)</td>
+                </tr>
+                <tr>
+                    <td>Open source</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
+                <tr>
+                    <td>No servers required</td>
+                    <td class="crossmark">❌</td>
+                    <td class="checkmark">✅</td>
+                </tr>
             </table>
         </div>
 
-        <!-- Continue with remaining sections in next message due to length... -->
-        
-        <div class="contract-address">
-            <strong>NKMA Token Contract Address:</strong>
-            0xCEf96C5f3e46ddFfe9c1C073cf907dCEA33F2425
-            <br><br>
-            <a href="https://bscscan.com/token/0xCEf96C5f3e46ddFfe9c1C073cf907dCEA33F2425" target="_blank" style="color: var(--accent);">View on BSCScan →</a>
+        <div id="section5" class="section">
+            <h2>5. HOW IT WORKS TODAY</h2>
+            <h3>Download. Install. Connect. Earn.</h3>
+            <p>NakamaMesh is live and operational right now.</p>
+
+            <h4>For Regular Users:</h4>
+            <p><strong>1. Download the App</strong></p>
+            <ul>
+                <li>Available for Android (iOS coming soon)</li>
+                <li>Free and open source</li>
+                <li>No signup required</li>
+                <li>No phone number needed</li>
+            </ul>
+
+            <p><strong>2. Start Messaging</strong></p>
+            <ul>
+                <li>End-to-end encrypted</li>
+                <li>Works like any messaging app</li>
+                <li>Automatically finds nearby users</li>
+                <li>Messages hop through relay nodes</li>
+            </ul>
+
+            <p><strong>3. Choose Your Priority</strong></p>
+            <ul>
+                <li>Free: Best-effort delivery (always available)</li>
+                <li>Express: 10 NKMA - Medium priority</li>
+                <li>Fast: 50 NKMA - High priority</li>
+                <li>Ultra Fast: 200 NKMA - Instant relay</li>
+            </ul>
+
+            <h4>For Relay Operators:</h4>
+            <p><strong>Option 1: Use Your Current Phone</strong></p>
+            <ul>
+                <li>Turn relay mode on</li>
+                <li>Earn NKMA while phone is on</li>
+                <li>Passive income from your pocket</li>
+                <li>No additional hardware needed</li>
+            </ul>
+
+            <p><strong>Option 2: Dedicate an Old Phone</strong></p>
+            <ul>
+                <li>Repurpose that drawer phone</li>
+                <li>Plug it in at home</li>
+                <li>24/7 relay earning</li>
+                <li>Costs: ~$2/month electricity</li>
+            </ul>
+
+            <p><strong>Option 3: Build/Buy a Relay Node</strong></p>
+            <ul>
+                <li>DIY kits: $20-50</li>
+                <li>Pre-built units: $100-200</li>
+                <li>Extended range (LoRa capable)</li>
+                <li>Higher earning potential</li>
+            </ul>
+
+            <p><strong>Option 4: Deploy at Scale</strong></p>
+            <ul>
+                <li>Entrepreneurs buy 10-100 units</li>
+                <li>Place in high-traffic areas</li>
+                <li>Earn like owning vending machines</li>
+                <li>Monthly passive income</li>
+            </ul>
+
+            <h4>Current Capabilities:</h4>
+            <ul>
+                <li><span class="checkmark">✅</span> Text messaging (encrypted end-to-end)</li>
+                <li><span class="checkmark">✅</span> Bluetooth mesh networking (pure P2P, no internet)</li>
+                <li><span class="checkmark">✅</span> Multi-hop relay (messages hop phone-to-phone)</li>
+                <li><span class="checkmark">✅</span> Channel-based group chats</li>
+                <li><span class="checkmark">✅</span> Private direct messaging</li>
+                <li><span class="checkmark">✅</span> Offline message queuing (store and forward)</li>
+                <li><span class="checkmark">✅</span> Nickname system</li>
+                <li><span class="checkmark">✅</span> Emergency wipe (triple-tap logo clears all data)</li>
+            </ul>
         </div>
 
-        <div class="section">
-            <p style="text-align: center; font-style: italic; color: var(--text-light);">
-                <em>Due to length, this is an excerpt. The full whitepaper continues with detailed sections on:</em><br>
-                How It Works Today | Technology Architecture | Tokenomics & Incentives | Earn by Participating<br>
-                Use Cases | Roadmap | Open Source Ecosystem | Team & Vision | Call to Action
-            </p>
+        <div id="section6" class="section">
+            <h2>6. TECHNOLOGY ARCHITECTURE</h2>
+            <h3>Built on Proven, Open Foundations</h3>
+
+            <h4>Core Technologies:</h4>
             
-            <p style="text-align: center; margin-top: 2rem;">
-                <a href="/" style="display: inline-block; background: var(--primary); color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 600;">← Back to NakamaMesh.network</a>
+            <p><strong>Mesh Networking Protocol:</strong></p>
+            <ul>
+                <li>Based on battle-tested Bitchat codebase</li>
+                <li>X25519 key exchange for privacy</li>
+                <li>AES-256-GCM encryption</li>
+                <li>Multi-hop routing with flood control</li>
+            </ul>
+
+            <p><strong>Blockchain Integration:</strong></p>
+            <ul>
+                <li>Binance Smart Chain (BEP-20)</li>
+                <li>Low transaction fees (~$0.10)</li>
+                <li>Fast confirmations (~3 seconds)</li>
+                <li>Proven DeFi ecosystem</li>
+            </ul>
+
+            <p><strong>NKMA Smart Contract:</strong></p>
+            <ul>
+                <li>100% auditable code</li>
+                <li>Vesting mechanism for sustainability</li>
+                <li>Flexible tier pricing</li>
+                <li>Relay reward distribution</li>
+            </ul>
+
+            <h4>Security & Privacy:</h4>
+            
+            <p><strong>End-to-End Encryption:</strong></p>
+            <ul>
+                <li>Messages encrypted on sender device</li>
+                <li>Only recipient can decrypt</li>
+                <li>Relay nodes see only routing data</li>
+                <li>No metadata collection</li>
+            </ul>
+
+            <p><strong>No Central Servers:</strong></p>
+            <ul>
+                <li>Peer-to-peer architecture</li>
+                <li>No message logs stored</li>
+                <li>No user database</li>
+                <li>No tracking or analytics</li>
+            </ul>
+
+            <p><strong>Emergency Wipe:</strong></p>
+            <ul>
+                <li>Triple-tap logo = instant data clear</li>
+                <li>Protects users in hostile situations</li>
+                <li>No recovery (by design)</li>
+                <li>Privacy is paramount</li>
+            </ul>
+
+            <h4>Open Source Commitment:</h4>
+            <p><strong>GitHub Repository:</strong></p>
+            <ul>
+                <li>Android app: Full source code</li>
+                <li>Smart contracts: Verified on BSCScan</li>
+                <li>Relay software: Coming Q1 2026</li>
+                <li>Documentation: Comprehensive guides</li>
+            </ul>
+
+            <p><strong>Bounty Program:</strong></p>
+            <ul>
+                <li>Bug fixes: 1,000-10,000 NKMA</li>
+                <li>Feature development: 25,000-100,000 NKMA</li>
+                <li>Major contributions: 200,000+ NKMA</li>
+                <li>Code quality matters</li>
+            </ul>
+        </div>
+
+        <div id="section7" class="section">
+            <h2>7. TOKENOMICS & INCENTIVES</h2>
+            <h3>NKMA: The Fuel of the Network</h3>
+
+            <h4>Token Overview:</h4>
+            <ul>
+                <li><strong>Name:</strong> NakamaMesh</li>
+                <li><strong>Symbol:</strong> NKMA</li>
+                <li><strong>Blockchain:</strong> Binance Smart Chain (BEP-20)</li>
+                <li><strong>Total Supply:</strong> 100,000,000,000 (100 Billion)</li>
+                <li><strong>Contract Address:</strong> 0xCEf96C5f3e46ddFfe9c1C073cf907dCEA33F2425</li>
+                <li><strong>Decimals:</strong> 18</li>
+            </ul>
+
+            <h4>Initial Distribution:</h4>
+            <table class="comparison-table">
+                <tr>
+                    <th>Allocation</th>
+                    <th>Amount</th>
+                    <th>Percentage</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td>Founder</td>
+                    <td>20,000,000,000</td>
+                    <td>20%</td>
+                    <td>Long-term alignment, locked 12 months</td>
+                </tr>
+                <tr>
+                    <td>Community Airdrop</td>
+                    <td>10,000,000,000</td>
+                    <td>10%</td>
+                    <td>Early adopters, testers, advocates</td>
+                </tr>
+                <tr>
+                    <td>Foundation Treasury</td>
+                    <td>70,000,000,000</td>
+                    <td>70%</td>
+                    <td>Vested over 100 months (8.3 years)</td>
+                </tr>
+            </table>
+
+            <h4>Vesting Schedule:</h4>
+            <p><strong>Monthly Release:</strong> 700,000,000 NKMA</p>
+            <p><strong>Distribution:</strong></p>
+            <ul>
+                <li>70% (490M) → Foundation Treasury (sustainability fund)</li>
+                <li>30% (210M) → Operations (development, marketing, infrastructure)</li>
+            </ul>
+
+            <h4>Message Tier Pricing:</h4>
+            <table class="comparison-table">
+                <tr>
+                    <th>Tier</th>
+                    <th>Cost (NKMA)</th>
+                    <th>Priority</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td>Free</td>
+                    <td>0</td>
+                    <td>Best effort</td>
+                    <td>Daily messaging</td>
+                </tr>
+                <tr>
+                    <td>Express</td>
+                    <td>10</td>
+                    <td>Medium</td>
+                    <td>Important messages</td>
+                </tr>
+                <tr>
+                    <td>Fast</td>
+                    <td>50</td>
+                    <td>High</td>
+                    <td>Time-sensitive</td>
+                </tr>
+                <tr>
+                    <td>Ultra Fast</td>
+                    <td>200</td>
+                    <td>Highest</td>
+                    <td>Emergency/critical</td>
+                </tr>
+            </table>
+
+            <h4>Fee Distribution (Paid Messages):</h4>
+            <p>Example: 200 NKMA Ultra Fast message</p>
+            <ul>
+                <li>5% (10 NKMA) → Foundation wallet</li>
+                <li>5-15% (10-30 NKMA) → App developer (if using custom app)</li>
+                <li>80-90% (160-180 NKMA) → Relay operators (split equally)</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Economic Flywheel:</strong></p>
+                <ol>
+                    <li>Users pay for priority</li>
+                    <li>Relays earn by helping deliver</li>
+                    <li>More relays = better coverage</li>
+                    <li>Better coverage = more users</li>
+                    <li>More users = more paid messages</li>
+                    <li>More paid messages = higher relay earnings</li>
+                    <li>Repeat!</li>
+                </ol>
+            </div>
+
+            <h4>Token Utility:</h4>
+            <ol>
+                <li>Pay for message priority</li>
+                <li>Earn by running relays</li>
+                <li>Governance voting (future)</li>
+                <li>Stake to run certified relays (future)</li>
+                <li>Payment for satellite time (future)</li>
+            </ol>
+        </div>
+
+        <div id="section8" class="section">
+            <h2>8. EARN BY PARTICIPATING</h2>
+            <h3>Everyone Can Contribute, Everyone Can Benefit</h3>
+
+            <h4>For Individuals:</h4>
+            <p><strong>Turn Your Phone Into Income</strong></p>
+            <ul>
+                <li><strong>Setup Time:</strong> 5 minutes</li>
+                <li><strong>Cost:</strong> $0 (use existing phone)</li>
+                <li><strong>Earnings:</strong> $5-50/month (location-dependent)</li>
+            </ul>
+
+            <p><strong>How:</strong></p>
+            <ol>
+                <li>Download NakamaMesh app</li>
+                <li>Enable relay mode in settings</li>
+                <li>Keep phone on and connected</li>
+                <li>Automatically earn NKMA for relaying messages</li>
+            </ol>
+
+            <p><strong>Perfect For:</strong></p>
+            <ul>
+                <li>Uber/Lyft drivers (driving anyway!)</li>
+                <li>Students (phone charging overnight)</li>
+                <li>Retirees (passive income)</li>
+                <li>Commuters (public transit)</li>
+                <li>Anyone with a spare phone</li>
+            </ul>
+
+            <h4>For Small Businesses:</h4>
+            <p><strong>Deploy a Relay, Earn Passive Income</strong></p>
+            <ul>
+                <li><strong>Setup Time:</strong> 30 minutes</li>
+                <li><strong>Cost:</strong> $50-200 (one-time hardware)</li>
+                <li><strong>Earnings:</strong> $20-200/month</li>
+            </ul>
+
+            <p><strong>Perfect For:</strong></p>
+            <ul>
+                <li>Coffee shops</li>
+                <li>Gas stations</li>
+                <li>Convenience stores</li>
+                <li>Restaurants</li>
+                <li>Apartment buildings</li>
+            </ul>
+
+            <h4>For Entrepreneurs & Investors:</h4>
+            <p><strong>Deploy at Scale</strong></p>
+            <ul>
+                <li><strong>Investment:</strong> $1,000-20,000</li>
+                <li><strong>Potential Return:</strong> $500-5,000/month</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>ROI Example:</strong></p>
+                <ul>
+                    <li>10 relays @ $100 each = $1,000 investment</li>
+                    <li>Each earns 50,000 NKMA/month average</li>
+                    <li>Total: 500,000 NKMA = $500/month (at $0.001/NKMA)</li>
+                    <li>Payback: 2 months</li>
+                    <li>Annual ROI: 600%</li>
+                </ul>
+            </div>
+
+            <h4>For App Developers:</h4>
+            <p><strong>Build on Our Platform, Earn Revenue</strong></p>
+            <p>The 5-15% Developer Fee is built into the smart contract.</p>
+            
+            <p><strong>Example:</strong></p>
+            <ul>
+                <li>You build a beautiful UI/UX</li>
+                <li>10,000 users adopt your app</li>
+                <li>They send 100,000 paid messages/month</li>
+                <li>Average 50 NKMA per message = 5,000,000 NKMA total fees</li>
+                <li>Your 10% = 500,000 NKMA = $500/month</li>
+            </ul>
+        </div>
+
+        <div id="section9" class="section">
+            <h2>9. USE CASES: REAL IMPACT</h2>
+            <h3>Where NakamaMesh Makes a Difference</h3>
+
+            <h4>Natural Disasters:</h4>
+            
+            <p><strong>Typhoons (Philippines, Japan, etc.):</strong></p>
+            <ul>
+                <li>Cell towers destroyed by wind/water</li>
+                <li>Power grid offline for weeks</li>
+                <li>Families separated and unable to communicate</li>
+                <li><strong>NakamaMesh:</strong> Phone-to-phone relay keeps communities connected</li>
+            </ul>
+
+            <p><strong>Hurricanes (USA, Caribbean):</strong></p>
+            <ul>
+                <li>Coastal infrastructure demolished</li>
+                <li>Evacuation coordination critical</li>
+                <li>Emergency services need communication</li>
+                <li><strong>NakamaMesh:</strong> Mesh network operates without power grid</li>
+            </ul>
+
+            <p><strong>Earthquakes (Worldwide):</strong></p>
+            <ul>
+                <li>Underground cables severed</li>
+                <li>Towers toppled</li>
+                <li>Traditional communication impossible</li>
+                <li><strong>NakamaMesh:</strong> Decentralized network adapts and routes around damage</li>
+            </ul>
+
+            <h4>Civil Unrest & Censorship:</h4>
+            
+            <p><strong>Internet Shutdowns:</strong></p>
+            <ul>
+                <li>Government cuts internet during protests</li>
+                <li>Citizens need to coordinate and inform the world</li>
+                <li>Traditional apps stop working</li>
+                <li><strong>NakamaMesh:</strong> Mesh network bypasses centralized infrastructure</li>
+            </ul>
+
+            <p><strong>Privacy Protection:</strong></p>
+            <ul>
+                <li>End-to-end encryption standard</li>
+                <li>No metadata collection</li>
+                <li>No server logs</li>
+                <li><strong>NakamaMesh:</strong> Truly private communication</li>
+            </ul>
+
+            <h4>Remote & Underserved Areas:</h4>
+            
+            <p><strong>Hiking & Wilderness:</strong></p>
+            <ul>
+                <li>Cell coverage non-existent</li>
+                <li>Emergency SOS critical</li>
+                <li>Coordination with hiking groups</li>
+                <li><strong>NakamaMesh:</strong> Relay network extends coverage</li>
+            </ul>
+
+            <p><strong>Developing Regions:</strong></p>
+            <ul>
+                <li>Internet infrastructure expensive</li>
+                <li>Deployment takes decades</li>
+                <li>Billions without access</li>
+                <li><strong>NakamaMesh:</strong> Community-deployed, self-funding network</li>
+            </ul>
+
+            <h4>Everyday Benefits:</h4>
+            <ul>
+                <li><strong>International Travel:</strong> No roaming fees, no SIM card needed</li>
+                <li><strong>Privacy-Conscious Users:</strong> No phone number required, no tracking</li>
+                <li><strong>Communities:</strong> Neighborhood watch, local events, emergency plans</li>
+                <li><strong>Events & Festivals:</strong> Works when cell towers are overloaded</li>
+            </ul>
+        </div>
+
+        <div id="section10" class="section">
+            <h2>10. ROADMAP TO GLOBAL COVERAGE</h2>
+            <h3>From Local Mesh to Global Constellation</h3>
+
+            <h4>Phase 1: Foundation (Q4 2025) <span class="status-progress">IN PROGRESS</span></h4>
+            <ul>
+                <li><span class="status-complete">✅</span> NKMA token deployed to BSC Mainnet (100B minted)</li>
+                <li><span class="status-complete">✅</span> Android app released (pure Bluetooth mesh working)</li>
+                <li><span class="status-complete">✅</span> Text messaging operational (encrypted)</li>
+                <li><span class="status-complete">✅</span> Multi-hop relay functional</li>
+                <li><span class="status-complete">✅</span> Channel-based group chats</li>
+                <li><span class="status-complete">✅</span> All code open sourced</li>
+                <li><span class="status-progress">⏳</span> Whitepaper published</li>
+                <li><span class="status-progress">⏳</span> Website launch</li>
+            </ul>
+
+            <h4>Phase 2: Community Growth & Wallet Integration (Q1 2026)</h4>
+            <p><strong>Goals:</strong></p>
+            <ul>
+                <li>Integrate NKMA wallet into app</li>
+                <li>Add payment tier UI</li>
+                <li>Launch airdrop program (10B NKMA)</li>
+                <li>Release iOS app</li>
+                <li>Achieve 10,000 active users</li>
+                <li>Deploy 1,000 relay nodes</li>
+            </ul>
+
+            <h4>Phase 3: Enhanced Features & Extended Range (Q1-Q2 2026)</h4>
+            <p><strong>Goals:</strong></p>
+            <ul>
+                <li>Integrate LoRa technology (15km range per hop!)</li>
+                <li>Launch relay operator dashboard</li>
+                <li>Release desktop apps (Windows, Mac, Linux)</li>
+                <li>Achieve 100,000 users</li>
+                <li>Deploy 10,000 relay nodes</li>
+            </ul>
+
+            <h4>Phase 4: Global Expansion (Q3-Q4 2026)</h4>
+            <p><strong>Goals:</strong></p>
+            <ul>
+                <li>Achieve 1,000,000 users</li>
+                <li>Deploy 50,000 relay nodes</li>
+                <li>Launch in 50 countries</li>
+                <li>Begin satellite partnership exploration</li>
+            </ul>
+
+            <h4>Phase 5: Satellite Integration (2027)</h4>
+            <p><strong>Goals:</strong></p>
+            <ul>
+                <li>Purchase satellite time from existing providers</li>
+                <li>Provide global coverage including oceans, deserts, remote areas</li>
+                <li>Hybrid ground-mesh + satellite routing</li>
+                <li>Support maritime and aviation use cases</li>
+                <li>Achieve 10,000,000 users</li>
+            </ul>
+
+            <h4>Phase 6: Space Program (2028-2032)</h4>
+            <p><strong>The Ambitious Goal:</strong> Launch our own micro-satellite constellation</p>
+            <p><strong>Timeline:</strong></p>
+            <ul>
+                <li>2028: First satellite launch (1-10 satellites)</li>
+                <li>2029-2030: Expand constellation (40 satellites)</li>
+                <li>2031-2032: Full global coverage (150 satellites)</li>
+            </ul>
+
+            <h4>Phase 7: The Unstoppable Network (2033+)</h4>
+            <p><strong>Vision Realized:</strong></p>
+            <ul>
+                <li>100,000,000+ users worldwide</li>
+                <li>1,000,000+ relay nodes</li>
+                <li>150 satellites in orbit</li>
+                <li>True global coverage</li>
+                <li>Community-owned and operated</li>
+                <li>Economically self-sustaining</li>
+            </ul>
+        </div>
+
+        <div id="section11" class="section">
+            <h2>11. OPEN SOURCE & DEVELOPER ECOSYSTEM</h2>
+            <h3>Built by the Community, For the Community</h3>
+
+            <h4>Our Commitment to Open Source:</h4>
+            <p>100% of our code is publicly available:</p>
+            <ul>
+                <li>Android app: github.com/nakamamesh/android</li>
+                <li>iOS app: github.com/nakamamesh/ios (Q1 2026)</li>
+                <li>Smart contracts: Verified on BSCScan</li>
+                <li>Relay software: github.com/nakamamesh/relay</li>
+                <li>Documentation: docs.nakamamesh.network</li>
+            </ul>
+            <p><strong>License:</strong> MIT (permissive, commercial use allowed)</p>
+
+            <h4>Why Open Source:</h4>
+            <ol>
+                <li><strong>Transparency:</strong> Anyone can audit our code</li>
+                <li><strong>Security:</strong> Many eyes find vulnerabilities</li>
+                <li><strong>Innovation:</strong> Community improves faster than any company</li>
+                <li><strong>Trust:</strong> No hidden backdoors or tracking</li>
+                <li><strong>Longevity:</strong> Code survives even if foundation disappears</li>
+            </ol>
+
+            <h4>Developer Bounty Program:</h4>
+            <table class="comparison-table">
+                <tr>
+                    <th>Category</th>
+                    <th>Reward Range</th>
+                    <th>Examples</th>
+                </tr>
+                <tr>
+                    <td>Critical Bugs</td>
+                    <td>50,000-200,000 NKMA</td>
+                    <td>Security vulnerabilities, data loss bugs</td>
+                </tr>
+                <tr>
+                    <td>Major Features</td>
+                    <td>100,000-500,000 NKMA</td>
+                    <td>iOS app, Desktop apps, LoRa integration</td>
+                </tr>
+                <tr>
+                    <td>Medium Features</td>
+                    <td>25,000-100,000 NKMA</td>
+                    <td>UI improvements, new message types</td>
+                </tr>
+                <tr>
+                    <td>Minor Features</td>
+                    <td>5,000-25,000 NKMA</td>
+                    <td>Bug fixes, documentation, translations</td>
+                </tr>
+            </table>
+
+            <h4>Build Your Own App:</h4>
+            <p><strong>Fork Our Code, Keep the Revenue</strong></p>
+            <p>The 5-15% Developer Fee is built into the smart contract.</p>
+            <ol>
+                <li>Fork github.com/nakamamesh/android</li>
+                <li>Customize the UI/UX</li>
+                <li>Add your wallet address to config</li>
+                <li>Set your developer fee (5-15%)</li>
+                <li>Publish to Google Play / App Store</li>
+                <li>Earn automatically from every paid message</li>
+            </ol>
+        </div>
+
+        <div id="section12" class="section">
+            <h2>12. TEAM & VISION</h2>
+            <h3>One Person's Mission, Powered by a Global Community</h3>
+
+            <h4>Founder:</h4>
+            <p><strong>Inpol Mahayosnand, Jr</strong><br>
+            <em>Founder & Visionary</em></p>
+            <p>Half Filipino, half Thai, born in the United States. Inspired by my mother & driven by a simple principle learned from my late mother:</p>
+            <div class="quote-box">
+                "We can either do something to make this a better world, or we can do nothing."
+            </div>
+
+            <p><strong>Background:</strong></p>
+            <ul>
+                <li>Witnessed the devastation of typhoons in the Philippines</li>
+                <li>Committed to helping people communicate with one another</li>
+                <li>Dedicated to building unstoppable communication for humanity</li>
+            </ul>
+
+            <h4>Current Team:</h4>
+            <p><strong>This is a solo project seeking collaborators.</strong></p>
+            <p>I'm one person with a vision, but I can't do this alone. I need:</p>
+            <ul>
+                <li>Developers (Android, iOS, backend)</li>
+                <li>Hardware engineers (relay design)</li>
+                <li>Community managers</li>
+                <li>Marketing specialists</li>
+                <li>Partnership coordinators</li>
+                <li>Satellite engineers (future)</li>
+            </ul>
+
+            <h4>Core Values:</h4>
+            <ol>
+                <li><strong>People First</strong> - Technology serves humanity, not the other way around</li>
+                <li><strong>Transparency Always</strong> - Open source code & honest communication</li>
+                <li><strong>Community Owned</strong> - The network belongs to those who build and operate it</li>
+                <li><strong>Unstoppable Access</strong> - Communication is a human right that can never be taken away</li>
+                <li><strong>Help Others by Helping Yourself</strong> - Economic incentives aligned with social good</li>
+            </ol>
+
+            <h4>Long-Term Vision:</h4>
+            <p><strong>By 2034:</strong></p>
+            <p>Imagine a world where:</p>
+            <ul>
+                <li>Natural disasters can't silence communities</li>
+                <li>Governments can't shut down communication</li>
+                <li>Corporations can't censor speech</li>
+                <li>Geography doesn't limit connectivity</li>
+                <li>Economic barriers don't prevent access</li>
+            </ul>
+            <p><strong>NakamaMesh makes this real.</strong></p>
+        </div>
+
+        <div id="section13" class="section">
+            <h2>13. CALL TO ACTION: JOIN US</h2>
+            <h3>We Need You. The World Needs This.</h3>
+
+            <h4>For Users:</h4>
+            <p><strong>Download NakamaMesh Today:</strong></p>
+            <ul>
+                <li>Android: <a href="https://nakamamesh.network/#download">Download App</a></li>
+                <li>iOS: Coming Q2 2026</li>
+            </ul>
+
+            <h4>For Relay Operators:</h4>
+            <p><strong>Turn Your Device Into Income</strong></p>
+            <p>Start earning 5,000-50,000 NKMA/month by enabling relay mode</p>
+
+            <h4>For Developers:</h4>
+            <p><strong>Build the Future</strong></p>
+            <ul>
+                <li>Fork on GitHub: <a href="https://github.com/nakamamesh">github.com/nakamamesh</a></li>
+                <li>Pick a bounty and earn NKMA</li>
+                <li>Build custom apps and earn revenue</li>
+            </ul>
+
+            <h4>Join the Community:</h4>
+            <ul>
+                <li>Telegram: t.me/nakamamesh</li>
+                <li>Twitter: @nakamamesh</li>
+                <li>Reddit: r/nakamamesh</li>
+                <li>GitHub: <a href="https://github.com/nakamamesh">github.com/nakamamesh</a></li>
+                <li>Email: <a href="mailto:hello@nakamamesh.network">hello@nakamamesh.network</a></li>
+            </ul>
+
+            <div class="highlight-box">
+                <h3>The Choice Is Yours</h3>
+                <p>My mother taught me we have two choices:</p>
+                <p><strong>Do something, or do nothing.</strong></p>
+                <p>I chose to do something.</p>
+                <p><strong>Now it's your turn.</strong></p>
+            </div>
+
+            <p>Download the app. Run a relay. Write code. Spread the word.</p>
+            <p>Every person who joins makes the network stronger. Every relay deployed brings us closer to unstoppable global communication. Every message sent proves that censorship and centralization can't win.</p>
+            <p><strong>Together, we're building infrastructure that will serve humanity for generations.</strong></p>
+            <p>Infrastructure that works during disasters.<br>
+            Infrastructure that can't be shut down.<br>
+            Infrastructure owned by the people.</p>
+
+            <div class="quote-box" style="text-align: center; font-size: 1.2em;">
+                <strong>This is NakamaMesh.</strong><br>
+                <strong>This is the future of communication.</strong><br>
+                <strong>This starts now.</strong><br>
+                <strong>This starts with you.</strong>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px;">
+                <strong>In memory of Zita, my mother, who taught me that one person can make a difference.</strong><br>
+                <strong>For the billions who deserve to communicate freely.</strong><br>
+                <strong>For the future we're building together.</strong>
+            </p>
+
+            <p style="text-align: center; margin-top: 30px; font-style: italic;">
+                — Inpol Mahayosnand, Jr<br>
+                NakamaMesh Founder, December 2025
+            </p>
+        </div>
+
+        <div class="section" style="border-top: 2px solid #00d4ff; padding-top: 40px; margin-top: 60px;">
+            <h2>Technical Appendices</h2>
+            
+            <h3>Appendix A: Smart Contract Address</h3>
+            <p><strong>NKMA Token:</strong> <a href="https://bscscan.com/token/0xCEf96C5f3e46ddFfe9c1C073cf907dCEA33F2425" target="_blank">0xCEf96C5f3e46ddFfe9c1C073cf907dCEA33F2425</a></p>
+            <p>Verified on BSCScan</p>
+
+            <h3>Appendix B: Contact Information</h3>
+            <ul>
+                <li><strong>General:</strong> <a href="mailto:hello@nakamamesh.network">hello@nakamamesh.network</a></li>
+                <li><strong>Partnerships:</strong> <a href="mailto:hello@nakamamesh.network">hello@nakamamesh.network</a></li>
+                <li><strong>Press:</strong> <a href="mailto:hello@nakamamesh.network">hello@nakamamesh.network</a></li>
+            </ul>
+
+            <p style="text-align: center; margin-top: 60px; color: #666;">
+                <strong>NakamaMesh Network © 2025</strong><br>
+                Open Source. Community Owned. Built for Humanity.
             </p>
         </div>
     </div>
 
-    <div class="footer">
-        <p><strong>NakamaMesh Network</strong></p>
-        <p>In memory of Zita, who taught me that one person can make a difference.</p>
-        <p style="margin-top: 1rem;">
-            <a href="mailto:hello@nakamamesh.network">hello@nakamamesh.network</a> | 
-            <a href="https://github.com/nakamamesh">GitHub</a>
-        </p>
-        <p style="margin-top: 1rem; font-size: 0.875rem; opacity: 0.7;">
-            © 2025 NakamaMesh Network | Open Source | Community Owned | Built for Humanity
-        </p>
-    </div>
-
-    <a href="#" class="back-to-top">↑</a>
+    <a href="#" class="back-to-top">↑ Top</a>
 
     <script>
-        // Smooth scroll
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
         });
 
-        // Back to top
-        document.querySelector('.back-to-top').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
         });
     </script>
 </body>
