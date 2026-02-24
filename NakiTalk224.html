@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Naki Talk 224 - Free Bluetooth mesh messaging app. No internet required. Part of the NakamaMesh Network.">
+    <title>Naki Talk 224 - Bluetooth Mesh Messaging | NakamaMesh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1A1A2E;
+            color: #FFFFFF;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 20px 60px;
+            position: relative;
+        }
+        .hero-logo-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        .hero-logo-wrap::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(232, 116, 154, 0.35) 0%, rgba(232, 116, 154, 0.1) 40%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .hero img {
+            width: 200px;
+            height: 200px;
+            max-width: 80vw;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 {
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+        .hero .tagline {
+            font-size: clamp(16px, 3vw, 22px);
+            font-weight: 500;
+            color: #E8749A;
+            margin-bottom: 8px;
+        }
+        .hero .sub-tagline {
+            font-size: clamp(12px, 2.5vw, 15px);
+            color: #E0E0E0;
+            margin-bottom: 32px;
+        }
+        .btn-download {
+            display: inline-block;
+            background: #E8749A;
+            color: #FFFFFF !important;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(232, 116, 154, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(232, 116, 154, 0.5);
+        }
+        /* Section styling */
+        section {
+            padding: 48px 20px;
+        }
+        section h2 {
+            font-size: clamp(22px, 4vw, 28px);
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+        section p {
+            font-size: 16px;
+            color: #E0E0E0;
+            margin-bottom: 16px;
+        }
+        /* What is section */
+        .what-is {
+            background: #16213E;
+            border-radius: 16px;
+            margin: 0 20px 24px;
+            padding: 32px 24px;
+        }
+        /* Feature cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .feature-card {
+            background: #16213E;
+            border-radius: 12px;
+            padding: 24px;
+            border-top: 4px solid #E8749A;
+            text-align: left;
+        }
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FFFFFF;
+        }
+        .feature-card p {
+            font-size: 14px;
+            color: #E0E0E0;
+            margin-bottom: 0;
+        }
+        /* How it works */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .step {
+            background: #16213E;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .step-num {
+            background: #E8749A;
+            color: #FFFFFF;
+            font-weight: 700;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .step h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+        .step p {
+            font-size: 15px;
+            margin-bottom: 0;
+        }
+        /* Ecosystem section */
+        .ecosystem {
+            background: #16213E;
+            border-radius: 16px;
+            margin: 0 20px 24px;
+            padding: 32px 24px;
+        }
+        .ecosystem a {
+            color: #9B72CF;
+            text-decoration: underline;
+        }
+        .ecosystem a:hover {
+            color: #E8749A;
+        }
+        /* Download section */
+        .download-section {
+            text-align: center;
+            padding: 48px 20px;
+        }
+        .download-section .btn-download {
+            font-size: 20px;
+            padding: 20px 48px;
+            margin-bottom: 24px;
+        }
+        .download-notes {
+            font-size: 14px;
+            color: #E0E0E0;
+            margin-top: 12px;
+        }
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #2A2A4A;
+            color: #E0E0E0;
+            font-size: 14px;
+        }
+        footer a {
+            color: #9B72CF;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #E8749A;
+        }
+        footer p {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Header / Hero Section -->
+    <header class="hero">
+        <div class="hero-logo-wrap">
+            <img src="axolotl_1024x1024.jpg" alt="Naki Talk 224 - Axolotl Mascot">
+        </div>
+        <h1>Naki Talk 224</h1>
+        <p class="tagline">Talk Anywhere. No Internet. No Limits.</p>
+        <p class="sub-tagline">Powered by Bluetooth Mesh Technology — Part of the NakamaMesh Network</p>
+        <a href="#" class="btn-download">Download APK</a>
+    </header>
+
+    <!-- 2. What is Naki Talk 224? -->
+    <section>
+        <div class="container">
+            <h2>What is Naki Talk 224?</h2>
+            <div class="what-is">
+                <p>Naki Talk 224 is a <strong style="color: #E8749A;">free decentralized messaging app</strong> that works over Bluetooth mesh — no internet, no servers, and no phone numbers required. Each device acts as a relay, extending the network range so messages can hop from one phone to another, reaching people beyond direct Bluetooth range.</p>
+                <p>Built for disaster relief, off-grid communities, protests, remote areas, and anywhere internet is unavailable, Naki Talk 224 is part of the <strong style="color: #9B72CF;">NakamaMesh ecosystem</strong>, inspired by the humanitarian mission of helping people communicate when infrastructure fails.</p>
+                <p>Named in honor of the vision to connect the unconnected — <strong style="color: #C9A84C;">224</strong> representing our community.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Key Features -->
+    <section style="background: #16213E; margin: 0; padding: 48px 20px;">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📡 No Internet Required</h3>
+                    <p>Communicates purely over Bluetooth between nearby devices.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔒 Private &amp; Secure</h3>
+                    <p>No phone numbers, no accounts, no central servers to spy on you.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 Mesh Relay Network</h3>
+                    <p>Messages hop between devices to extend range beyond direct Bluetooth.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🤝 Cross-Platform</h3>
+                    <p>Naki Talk 224 devices can communicate with standard BitChat iOS and Android users.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. How It Works -->
+    <section>
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <div>
+                        <h3>Download and install Naki Talk 224</h3>
+                        <p>Get the APK and install it on your Android device (Android 8.0+).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <div>
+                        <h3>Open the app</h3>
+                        <p>It automatically discovers nearby devices over Bluetooth.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <div>
+                        <h3>Start messaging</h3>
+                        <p>No setup, no login, no internet needed. Just start talking.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Part of the NakamaMesh Ecosystem -->
+    <section>
+        <div class="container">
+            <h2>Part of the NakamaMesh Ecosystem</h2>
+            <div class="ecosystem">
+                <p>Naki Talk 224 connects to the broader <strong style="color: #E8749A;">NakamaMesh Network</strong> — a community-driven initiative to provide unstoppable communication for everyone. The NKMA token ecosystem supports development and adoption of mesh technologies that keep people connected when traditional infrastructure fails.</p>
+                <p>Learn more at <a href="https://nakamamesh.github.io">nakamamesh.github.io</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Download Section -->
+    <section class="download-section">
+        <div class="container">
+            <h2>Download</h2>
+            <a href="#" class="btn-download">Download Naki Talk 224 APK</a>
+            <p class="download-notes">Android 8.0 and above required.</p>
+            <p class="download-notes">You may need to enable "Install from Unknown Sources" in your Android settings.</p>
+        </div>
+    </section>
+
+    <!-- 7. Footer -->
+    <footer>
+        <p>Naki Talk 224 is part of the NakamaMesh Network</p>
+        <p>Built with ❤️ in honor of Zita</p>
+        <p><a href="https://nakamamesh.github.io">nakamamesh.github.io</a></p>
+    </footer>
+</body>
+</html>
