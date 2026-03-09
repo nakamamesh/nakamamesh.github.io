@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARB 5 MIN BTC | NakamaMesh</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--g:#00ff88;--y:#ffe44d;--r:#ff4444;--c:#00e5ff;--bg:#050d0f}
+  body{background:var(--bg);color:var(--g);font-family:'Share Tech Mono',monospace;min-height:100vh;padding:16px;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+  .scanline{position:fixed;left:0;top:-5%;width:100%;height:6px;background:linear-gradient(transparent,rgba(0,255,136,0.06),transparent);animation:scan 5s linear infinite;pointer-events:none;z-index:999}
+  @keyframes scan{0%{top:-5%}100%{top:105%}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes fadeIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 15px var(--g)}50%{box-shadow:0 0 40px var(--g),0 0 80px rgba(0,255,136,0.3)}}
+  @keyframes arbFlash{0%,100%{box-shadow:0 0 15px var(--y)}50%{box-shadow:0 0 60px var(--y),0 0 120px rgba(255,228,77,0.4)}}
+  .panel{background:rgba(0,20,15,0.92);border:1px solid rgba(0,255,136,0.18);border-radius:6px;padding:12px}
+  .header{text-align:center;margin-bottom:16px;position:relative;z-index:1}
+  .header .sub{font-size:10px;letter-spacing:5px;opacity:0.4;margin-bottom:4px}
+  .header .title{font-size:22px;letter-spacing:8px;font-weight:bold;text-shadow:0 0 20px var(--g)}
+  .header .tagline{font-size:9px;letter-spacing:4px;opacity:0.3;margin-top:3px}
+  .live-dot{position:absolute;right:0;top:4px;display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--r)}
+  .dot.live{background:var(--g);animation:blink 1s infinite}
+  .grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px;position:relative;z-index:1}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;position:relative;z-index:1}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1}
+  .stat-box{text-align:center}
+  .stat-val{font-size:20px;font-weight:bold;letter-spacing:1px}
+  .stat-lbl{font-size:7px;letter-spacing:2px;opacity:0.45;margin-top:3px}
+  .controls{display:flex;gap:10px;justify-content:center;margin-bottom:10px;position:relative;z-index:1}
+  .btn{border:none;border-radius:5px;padding:10px 24px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+  .btn:hover:not(:disabled){opacity:0.85;transform:scale(1.02)}
+  .btn:disabled{opacity:0.3;cursor:not-allowed}
+  .btn-start{background:var(--g);color:#050d0f}
+  .btn-stop{background:rgba(255,68,68,0.12);color:var(--r);border:1px solid rgba(255,68,68,0.3)}
+  .btn-reset{background:rgba(0,229,255,0.08);color:var(--c);border:1px solid rgba(0,229,255,0.2)}
+  .log-box{height:260px;overflow-y:auto;font-size:9px;line-height:1.9}
+  .log-entry{border-bottom:1px solid rgba(0,255,136,0.04);padding:1px 0;animation:fadeIn 0.25s ease}
+  .log-ts{opacity:0.3;margin-right:8px}
+  .opp-box{height:260px;overflow-y:auto}
+  .opp-entry{border-bottom:1px solid rgba(0,255,136,0.08);padding:6px 0;font-size:9px;animation:fadeIn 0.3s ease}
+  .section-lbl{font-size:9px;letter-spacing:3px;opacity:0.45;margin-bottom:8px}
+  .live-ind{margin-left:8px;color:var(--r);animation:blink 1s infinite;display:none}
+  .prices-row{display:flex;justify-content:center;gap:24px;font-size:12px;margin:12px 0;position:relative;z-index:1;flex-wrap:wrap}
+  .prices-row span{opacity:0.6}
+  .prices-row .val{opacity:1;font-weight:bold}
+  .center-ring{width:100px;height:100px;border-radius:50%;border:2px solid var(--g);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;position:relative;background:rgba(0,20,12,0.95);animation:pulse 2s ease-in-out infinite}
+  .center-ring .spinner{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(0,255,136,0.15);border-top-color:var(--g);animation:spin 3s linear infinite}
+  .center-ring .num{font-size:24px;font-weight:bold;text-shadow:0 0 15px var(--g)}
+  .center-ring .lbl{font-size:7px;opacity:0.4;letter-spacing:2px}
+  .trigger{border:1px solid var(--c);border-radius:6px;padding:10px 20px;text-align:center;background:rgba(0,229,255,0.04);margin:12px auto;max-width:220px;transition:all 0.3s;position:relative;z-index:1}
+  .trigger.arb{border-color:var(--y);background:rgba(255,228,77,0.14);animation:arbFlash 0.5s ease}
+  .analysis{margin-top:10px;position:relative;z-index:1;border-color:rgba(0,229,255,0.2);display:none}
+  .analysis .albl{font-size:9px;letter-spacing:3px;color:var(--c);opacity:0.5;margin-bottom:8px}
+  .analysis .amsg{font-size:10px;line-height:2}
+  .analysis .aftr{opacity:0.4;font-size:8px;margin-top:6px}
+  .notice{background:rgba(255,228,77,0.08);border:1px solid rgba(255,228,77,0.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:9px;line-height:1.8;color:var(--y);position:relative;z-index:1}
+  ::-webkit-scrollbar{width:3px}
+  ::-webkit-scrollbar-thumb{background:rgba(0,255,136,0.25);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<div class="header">
+  <div class="sub">POLYMARKET · BTC UP/DOWN · 5-MIN MARKETS</div>
+  <div class="title">ARB 5 MIN BTC</div>
+  <div class="tagline">LIVE OPPORTUNITY SCANNER &amp; ANALYZER · NAKAMAMESH</div>
+  <div class="live-dot"><div class="dot" id="dot"></div><span id="liveLabel">OFFLINE</span></div>
+</div>
+
+<!-- IMPORTANT NOTE -->
+<div class="notice" id="noticeBox">
+  ⚠ <strong>MUST be hosted on HTTPS</strong> (GitHub Pages / any web server) for API calls to work.
+  Opening as a local file will block the fetch. Once pushed to <strong>nakamamesh.github.io</strong> this notice disappears and the scanner runs free forever.
+</div>
+
+<!-- Stats Row 1 -->
+<div class="grid6">
+  <div class="panel stat-box"><div class="stat-val" id="sStatus" style="color:var(--y)">IDLE</div><div class="stat-lbl">STATUS</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sRuntime" style="color:var(--c)">--</div><div class="stat-lbl">RUNTIME</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sScans">0</div><div class="stat-lbl">SCANS</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sChecked">0</div><div class="stat-lbl">CHECKED</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sFound" style="color:rgba(0,255,136,0.3)">0</div><div class="stat-lbl">ARB FOUND</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sHitRate">0.0%</div><div class="stat-lbl">HIT RATE</div></div>
+</div>
+
+<!-- Stats Row 2 -->
+<div class="grid4">
+  <div class="panel stat-box"><div class="stat-val" id="sBest" style="color:var(--y)">--</div><div class="stat-lbl">BEST SPREAD</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sAvg">--</div><div class="stat-lbl">AVG PROFIT</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sMiss" style="color:var(--c)">0</div><div class="stat-lbl">NEAR MISSES</div></div>
+  <div class="panel stat-box"><div class="stat-val" id="sPer50">--</div><div class="stat-lbl">AVG / $50 SIDE</div></div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button class="btn btn-start" id="btnStart" onclick="startScanner()">▶ START SCAN</button>
+  <button class="btn btn-stop"  id="btnStop"  onclick="stopScanner()" disabled>■ STOP</button>
+  <button class="btn btn-reset" onclick="resetAll()">↺ RESET</button>
+</div>
+
+<!-- Live price display -->
+<div class="prices-row">
+  <span>YES ASK: <span class="val" id="yesP" style="color:var(--g)">--</span></span>
+  <span style="opacity:0.3">+</span>
+  <span>NO ASK: <span class="val" id="noP" style="color:var(--r)">--</span></span>
+  <span style="opacity:0.3">=</span>
+  <span>COMBINED: <span class="val" id="combP" style="color:var(--c)">--</span></span>
+  <span>PROFIT: <span class="val" id="profP" style="color:var(--y)">--</span></span>
+</div>
+
+<!-- Center visual -->
+<div style="position:relative;z-index:1">
+  <div class="center-ring">
+    <div class="spinner"></div>
+    <div class="num" id="scanCount">0</div>
+    <div class="lbl">SCANS</div>
+  </div>
+  <div class="trigger" id="triggerBox">
+    <div style="font-size:8px;letter-spacing:2px;opacity:0.5;color:var(--c)">COMBINED</div>
+    <div style="font-size:18px;font-weight:bold;color:var(--c)">&lt; $1.00</div>
+    <div style="font-size:7px;opacity:0.4;letter-spacing:2px">ARBITRAGE TRIGGER</div>
+  </div>
+</div>
+
+<!-- Log + Opportunities -->
+<div class="grid2" style="margin-top:10px">
+  <div class="panel">
+    <div class="section-lbl">LIVE SCAN LOG <span class="live-ind" id="logLive">● LIVE</span></div>
+    <div class="log-box" id="logBox">
+      <div style="opacity:0.3;padding-top:30px;text-align:center">Press START SCAN to begin…</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="section-lbl">ARB OPPORTUNITIES CAPTURED (≥ 1¢)</div>
+    <div class="opp-box" id="oppBox">
+      <div style="opacity:0.3;padding-top:20px;text-align:center;font-size:10px">
+        No 1¢+ opportunities yet…<br>
+        <span style="font-size:8px">Watching for YES+NO &lt; $0.99</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Viability Analysis -->
+<div class="panel analysis" id="analysisBox">
+  <div class="albl">VIABILITY ANALYSIS</div>
+  <div class="amsg" id="analysisMsg"></div>
+  <div class="aftr" id="analysisFooter"></div>
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────────
+const GAMMA = 'https://gamma-api.polymarket.com';
+const CLOB  = 'https://clob.polymarket.com';
+const SCAN_INTERVAL = 15000; // 15 seconds
+
+// ── State ────────────────────────────────────────────────────
+let running=false, timer=null, startTime=null;
+let scans=0, checked=0, found=0, missed=0, bestSpread=0, totalProfit=0;
+
+// Hide notice if on HTTPS
+if (location.protocol === 'https:') {
+  document.getElementById('noticeBox').style.display = 'none';
+}
+
+// ── Helpers ──────────────────────────────────────────────────
+function currentSlug() {
+  return 'btc-updown-5m-' + (Math.floor(Date.now()/300000)*300);
+}
+function nextSlug() {
+  return 'btc-updown-5m-' + ((Math.floor(Date.now()/300000)+1)*300);
+}
+function prevSlug() {
+  return 'btc-updown-5m-' + ((Math.floor(Date.now()/300000)-1)*300);
+}
+function ts() {
+  return new Date().toLocaleTimeString();
+}
+
+function addLog(msg, color='#00ff88') {
+  const box = document.getElementById('logBox');
+  // Clear placeholder
+  if (box.firstChild && box.firstChild.style?.textAlign === 'center') box.innerHTML='';
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `<span class="log-ts">${ts()}</span><span style="color:${color}">${msg}</span>`;
+  box.insertBefore(el, box.firstChild);
+  while (box.children.length > 120) box.removeChild(box.lastChild);
+}
+
+// ── API ──────────────────────────────────────────────────────
+async function fetchWithTimeout(url, ms=6000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(()=>ctrl.abort(), ms);
+  try {
+    const r = await fetch(url, {signal: ctrl.signal});
+    clearTimeout(id);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  } catch(e) {
+    clearTimeout(id);
+    throw e;
+  }
+}
+
+async function getTokenIds(slug) {
+  const data = await fetchWithTimeout(`${GAMMA}/events/slug/${slug}`);
+  if (!data || !data.markets || !data.markets.length) throw new Error('No markets');
+  const ids = JSON.parse(data.markets[0].clobTokenIds || '[]');
+  if (ids.length < 2) throw new Error('Need 2 token IDs');
+  return { yesId: ids[0], noId: ids[1], title: data.title || slug };
+}
+
+async function getBestAsk(tokenId) {
+  const book = await fetchWithTimeout(`${CLOB}/book?token_id=${tokenId}`);
+  const asks = (book.asks || []).sort((a,b) => parseFloat(a.price)-parseFloat(b.price));
+  return asks.length ? parseFloat(asks[0].price) : null;
+}
+
+// ── Scan ─────────────────────────────────────────────────────
+async function scanOnce() {
+  scans++;
+  document.getElementById('scanCount').textContent = scans;
+  addLog(`── Scan #${scans} ──`, '#00e5ff');
+
+  // Try current, next and previous slots to handle rollover edge
+  let tokenData = null;
+  for (const slug of [currentSlug(), nextSlug(), prevSlug()]) {
+    try {
+      tokenData = await getTokenIds(slug);
+      addLog(`  Market: ${tokenData.title}`, 'rgba(0,255,136,0.45)');
+      break;
+    } catch(e) {
+      // silently try next slot
+    }
+  }
+
+  if (!tokenData) {
+    addLog('  ⚠ No active market found this window — market may be between rotations', '#ffe44d');
+    updateStats();
+    return;
+  }
+
+  let yesAsk, noAsk;
+  try {
+    [yesAsk, noAsk] = await Promise.all([
+      getBestAsk(tokenData.yesId),
+      getBestAsk(tokenData.noId)
+    ]);
+  } catch(e) {
+    addLog(`  ⚠ Order book error: ${e.message}`, 'rgba(255,100,100,0.6)');
+    updateStats();
+    return;
+  }
+
+  if (yesAsk === null || noAsk === null) {
+    addLog('  ⚠ Empty order book — market just expired, waiting for next window', '#ffe44d');
+    updateStats();
+    return;
+  }
+
+  checked++;
+  const combined = yesAsk + noAsk;
+  const profit = parseFloat((1.0 - combined).toFixed(6));
+  const isArb   = profit >= 0.01;
+  const isClose = profit > 0 && profit < 0.01;
+
+  // Update price display
+  document.getElementById('yesP').textContent   = yesAsk.toFixed(4);
+  document.getElementById('noP').textContent    = noAsk.toFixed(4);
+  const cEl = document.getElementById('combP');
+  cEl.textContent  = combined.toFixed(4);
+  cEl.style.color  = isArb ? '#ffe44d' : combined < 1.0 ? '#00ff88' : '#ff4444';
+  const pEl = document.getElementById('profP');
+  pEl.textContent  = (profit >= 0 ? '+' : '') + profit.toFixed(4);
+  pEl.style.color  = isArb ? '#ffe44d' : profit > 0 ? '#00ff88' : '#ff4444';
+
+  // Trigger box flash
+  const trig = document.getElementById('triggerBox');
+  if (isArb) {
+    trig.classList.add('arb');
+    setTimeout(() => trig.classList.remove('arb'), 700);
+  }
+
+  if (isArb) {
+    found++;
+    totalProfit += profit;
+    bestSpread = Math.max(bestSpread, profit);
+
+    // Add to opportunities panel
+    const oBox = document.getElementById('oppBox');
+    if (oBox.firstChild?.style?.textAlign === 'center') oBox.innerHTML = '';
+    const el = document.createElement('div');
+    el.className = 'opp-entry';
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:#ffe44d;font-weight:bold">✅ +$${profit.toFixed(4)} · $${(profit*50).toFixed(3)} per $50 side</span>
+        <span style="opacity:0.4">${ts()}</span>
+      </div>
+      <div style="opacity:0.55;margin-top:2px">YES ${yesAsk.toFixed(4)} + NO ${noAsk.toFixed(4)} = ${combined.toFixed(4)}</div>
+      <div style="opacity:0.3;font-size:8px;margin-top:1px">${tokenData.title}</div>`;
+    oBox.insertBefore(el, oBox.firstChild);
+
+    addLog(`  ✅ ARB! YES ${yesAsk.toFixed(4)} + NO ${noAsk.toFixed(4)} = ${combined.toFixed(4)} → +$${profit.toFixed(4)} profit`, '#ffe44d');
+  } else if (isClose) {
+    missed++;
+    addLog(`  ⚠ Near miss: combined ${combined.toFixed(4)} — only $${Math.abs(profit).toFixed(4)} away`, 'rgba(0,255,136,0.4)');
+  } else {
+    addLog(`  · ${combined.toFixed(4)} combined — no edge (${profit > 0 ? '+' : ''}${profit.toFixed(4)})`, 'rgba(0,255,136,0.18)');
+  }
+
+  updateStats();
+  if (scans >= 3) updateAnalysis();
+}
+
+// ── Stats UI ─────────────────────────────────────────────────
+function updateStats() {
+  const rt = startTime ? Math.floor((Date.now()-startTime)/60000)+'m' : '--';
+  const hr = checked > 0 ? ((found/checked)*100).toFixed(1) : '0.0';
+  const avg = found > 0 ? '$'+(totalProfit/found).toFixed(4) : '--';
+  const p50 = found > 0 ? '$'+(totalProfit*50/found).toFixed(3) : '--';
+
+  document.getElementById('sStatus').textContent  = running ? 'RUNNING' : 'IDLE';
+  document.getElementById('sStatus').style.color  = running ? '#00ff88' : '#ffe44d';
+  document.getElementById('sRuntime').textContent = rt;
+  document.getElementById('sScans').textContent   = scans;
+  document.getElementById('sChecked').textContent = checked;
+  document.getElementById('sFound').textContent   = found;
+  document.getElementById('sFound').style.color   = found > 0 ? '#ffe44d' : 'rgba(0,255,136,0.3)';
+  document.getElementById('sHitRate').textContent = hr + '%';
+  document.getElementById('sHitRate').style.color = parseFloat(hr) > 5 ? '#ffe44d' : '#00ff88';
+  document.getElementById('sBest').textContent    = bestSpread > 0 ? '$'+bestSpread.toFixed(4) : '--';
+  document.getElementById('sAvg').textContent     = avg;
+  document.getElementById('sMiss').textContent    = missed;
+  document.getElementById('sPer50').textContent   = p50;
+}
+
+function updateAnalysis() {
+  const box = document.getElementById('analysisBox');
+  const msg = document.getElementById('analysisMsg');
+  const ftr = document.getElementById('analysisFooter');
+  box.style.display = 'block';
+  const hr  = checked > 0 ? (found/checked)*100 : 0;
+  const avg = found > 0 ? totalProfit/found : 0;
+
+  if (found === 0) {
+    msg.style.color = '#ff6666';
+    msg.textContent = `⚠ No 1¢+ opportunities in ${scans} scans / ${checked} checks. The arb window may be efficient right now. Keep scanning — prices shift constantly. Try running for 2–4 hours minimum.`;
+  } else if (hr < 2) {
+    msg.style.color = '#ffe44d';
+    msg.textContent = `⚠ Low hit rate (${hr.toFixed(1)}%) — edge exists but rare. At $50/side avg profit: $${(avg*50).toFixed(3)}/trade. Need volume + automation to be profitable.`;
+  } else if (hr < 10) {
+    msg.style.color = '#00ff88';
+    msg.textContent = `✅ Moderate hit rate (${hr.toFixed(1)}%). Strategy looks viable with automation. Avg spread: $${avg.toFixed(4)} · Est. daily ($50/side, 48 scans): ~$${(found/scans*48*avg*50).toFixed(2)}`;
+  } else {
+    msg.style.color = '#ffe44d';
+    msg.textContent = `🚀 Strong hit rate (${hr.toFixed(1)}%)! ${found} hits in ${scans} scans. Avg $${(avg*50).toFixed(3)}/trade @$50/side. Est. daily: ~$${(found/scans*48*avg*50).toFixed(2)} — BUILD THE BOT.`;
+  }
+  ftr.textContent = `Near misses: ${missed} · Best spread: ${bestSpread>0?'$'+bestSpread.toFixed(4):'none'} · Total profit potential so far: $${(totalProfit*50).toFixed(3)} @$50/side`;
+}
+
+// ── Controls ─────────────────────────────────────────────────
+function startScanner() {
+  if (running) return;
+  running = true;
+  startTime = Date.now();
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('btnStop').disabled  = false;
+  document.getElementById('logLive').style.display = 'inline';
+  document.getElementById('dot').classList.add('live');
+  document.getElementById('liveLabel').textContent = 'LIVE';
+  document.getElementById('logBox').innerHTML = '';
+  addLog('ARB 5 MIN BTC scanner started', '#00e5ff');
+  addLog(`Scanning every 15s · watching YES+NO ask < $0.99`, 'rgba(0,255,136,0.5)');
+  scanOnce();
+  timer = setInterval(scanOnce, SCAN_INTERVAL);
+}
+
+function stopScanner() {
+  if (!running) return;
+  running = false;
+  clearInterval(timer);
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnStop').disabled  = true;
+  document.getElementById('logLive').style.display = 'none';
+  document.getElementById('dot').classList.remove('live');
+  document.getElementById('liveLabel').textContent = 'OFFLINE';
+  addLog('── Scanner stopped ──', '#00e5ff');
+  updateStats();
+}
+
+function resetAll() {
+  stopScanner();
+  [scans, checked, found, missed, bestSpread, totalProfit] = [0,0,0,0,0,0];
+  startTime = null;
+  document.getElementById('logBox').innerHTML = '<div style="opacity:0.3;padding-top:30px;text-align:center">Press START SCAN to begin…</div>';
+  document.getElementById('oppBox').innerHTML = '<div style="opacity:0.3;padding-top:20px;text-align:center;font-size:10px">No 1¢+ opportunities yet…<br><span style="font-size:8px">Watching for YES+NO &lt; $0.99</span></div>';
+  document.getElementById('analysisBox').style.display = 'none';
+  document.getElementById('scanCount').textContent = '0';
+  ['yesP','noP','combP','profP'].forEach(id => document.getElementById(id).textContent = '--');
+  updateStats();
+}
+</script>
+</body>
+</html>
