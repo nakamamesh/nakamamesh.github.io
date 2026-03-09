@@ -114,7 +114,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="log-box" id="logBox"><div data-placeholder style="opacity:0.3;padding-top:30px;text-align:center">Press START SCAN to begin</div></div>
   </div>
   <div class="panel">
-    <div class="section-lbl">ARB OPPORTUNITIES CAPTURED (1 CENT MINIMUM)</div>
+    <div class="section-lbl">ARB OPPORTUNITIES CAPTURED</div>
     <div class="opp-box" id="oppBox"><div style="opacity:0.3;padding-top:20px;text-align:center;font-size:10px">No opportunities yet<br><span style="font-size:8px">Watching for YES+NO less than $0.99</span></div></div>
   </div>
 </div>
@@ -124,13 +124,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   <div class="aftr" id="analysisFooter"></div>
 </div>
 <script>
-const PROXY = url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-const GAMMA = 'https://gamma-api.polymarket.com';
-const CLOB  = 'https://clob.polymarket.com';
-const INTERVAL_MS = 15000;
-let running=false,timer=null,startTime=null;
-let scans=0,checked=0,found=0,missed=0,bestSpread=0,totalProfit=0;
-function slugAt(o){return 'btc-updown-5m-'+((Math.floor(Date.now()/300000)+o)*300);}
+var PROXY=function(url){return 'https://api.allorigins.win/raw?url='+encodeURIComponent(url);};
+var GAMMA='https://gamma-api.polymarket.com';
+var CLOB='https://clob.polymarket.com';
+var INTERVAL_MS=15000;
+var running=false,timer=null,startTime=null;
+var scans=0,checked=0,found=0,missed=0,bestSpread=0,totalProfit=0;
+var currentTokenIds=null;
+
+function slugAt(o){
+  return 'btc-updown-5m-'+((Math.floor(Date.now()/300000)+o)*300);
+}
 function ts(){return new Date().toLocaleTimeString();}
 function addLog(msg,color){
   color=color||'#00ff88';
@@ -142,70 +146,97 @@ function addLog(msg,color){
   box.insertBefore(el,box.firstChild);
   while(box.children.length>120)box.removeChild(box.lastChild);
 }
-async function fetchJSON(url){
-  var r=await fetch(PROXY(url),{signal:AbortSignal.timeout(8000)});
-  if(!r.ok)throw new Error('HTTP '+r.status);
-  return r.json();
+function fetchJSON(url){
+  return fetch(PROXY(url),{signal:AbortSignal.timeout(10000)})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});
 }
-async function getTokenIds(slug){
-  var data=await fetchJSON(GAMMA+'/events/slug/'+slug);
-  if(!data||!data.markets||!data.markets.length)throw new Error('No markets');
-  var ids=JSON.parse(data.markets[0].clobTokenIds||'[]');
-  if(ids.length<2)throw new Error('Need 2 token IDs');
-  return {yesId:ids[0],noId:ids[1],title:data.title||slug};
+function findMarket(){
+  var offsets=[0,-1,1,-2,2,-3,3,-4,4,-5,5,-6,6,-7,7,-8,8,-9,9,-10,10,-11,11,-12,12];
+  var idx=0;
+  function tryNext(){
+    if(idx>=offsets.length)return Promise.reject(new Error('No market found in range'));
+    var slug=slugAt(offsets[idx++]);
+    return fetchJSON(GAMMA+'/events/slug/'+slug)
+      .then(function(data){
+        if(!data||!data.markets||!data.markets.length)return tryNext();
+        var ids=JSON.parse(data.markets[0].clobTokenIds||'[]');
+        if(ids.length<2)return tryNext();
+        return {yesId:ids[0],noId:ids[1],title:data.title||slug};
+      })
+      .catch(function(){return tryNext();});
+  }
+  return tryNext();
 }
-async function getBestAsk(tokenId){
-  var book=await fetchJSON(CLOB+'/book?token_id='+tokenId);
-  var asks=(book.asks||[]).sort(function(a,b){return parseFloat(a.price)-parseFloat(b.price);});
-  return asks.length?parseFloat(asks[0].price):null;
-}
-async function scanOnce(){
+function scanOnce(){
   scans++;
   document.getElementById('scanCount').textContent=scans;
   addLog('Scan #'+scans,'#00e5ff');
-  var tokenData=null;
-  for(var o of [0,1,-1,2,-2]){
-    try{tokenData=await getTokenIds(slugAt(o));addLog('Market: '+tokenData.title,'rgba(0,255,136,0.45)');break;}catch(e){}
-  }
-  if(!tokenData){addLog('Waiting for market window...','rgba(255,200,0,0.5)');updateStats();return;}
-  var yesAsk,noAsk;
-  try{
-    var results=await Promise.all([getBestAsk(tokenData.yesId),getBestAsk(tokenData.noId)]);
-    yesAsk=results[0];noAsk=results[1];
-  }catch(e){addLog('Order book error: '+e.message,'rgba(255,100,100,0.6)');updateStats();return;}
-  if(yesAsk===null||noAsk===null){addLog('Order book empty - waiting','#ffe44d');updateStats();return;}
-  checked++;
-  var combined=yesAsk+noAsk;
-  var profit=parseFloat((1.0-combined).toFixed(6));
-  var isArb=profit>=0.01;
-  var isClose=profit>0&&profit<0.01;
-  document.getElementById('yesP').textContent=yesAsk.toFixed(4);
-  document.getElementById('noP').textContent=noAsk.toFixed(4);
-  var cEl=document.getElementById('combP');
-  cEl.textContent=combined.toFixed(4);
-  cEl.style.color=isArb?'#ffe44d':combined<1.0?'#00ff88':'#ff4444';
-  var pEl=document.getElementById('profP');
-  pEl.textContent=(profit>=0?'+':'')+profit.toFixed(4);
-  pEl.style.color=isArb?'#ffe44d':profit>0?'#00ff88':'#ff4444';
-  var trig=document.getElementById('triggerBox');
-  if(isArb){trig.classList.add('arb');setTimeout(function(){trig.classList.remove('arb');},700);}
-  if(isArb){
-    found++;totalProfit+=profit;bestSpread=Math.max(bestSpread,profit);
-    var oBox=document.getElementById('oppBox');
-    if(oBox.firstChild&&oBox.firstChild.style&&oBox.firstChild.style.textAlign==='center')oBox.innerHTML='';
-    var el=document.createElement('div');
-    el.className='opp-entry';
-    el.innerHTML='<div style="display:flex;justify-content:space-between"><span style="color:#ffe44d;font-weight:bold">ARB +$'+profit.toFixed(4)+' - $'+(profit*50).toFixed(3)+' per $50 side</span><span style="opacity:0.4">'+ts()+'</span></div><div style="opacity:0.55;margin-top:2px">YES '+yesAsk.toFixed(4)+' + NO '+noAsk.toFixed(4)+' = '+combined.toFixed(4)+'</div><div style="opacity:0.3;font-size:8px;margin-top:1px">'+tokenData.title+'</div>';
-    oBox.insertBefore(el,oBox.firstChild);
-    addLog('ARB FOUND! YES '+yesAsk.toFixed(4)+' + NO '+noAsk.toFixed(4)+' = '+combined.toFixed(4)+' PROFIT +$'+profit.toFixed(4),'#ffe44d');
-  }else if(isClose){
-    missed++;
-    addLog('Near miss: '+combined.toFixed(4)+' - $'+Math.abs(profit).toFixed(4)+' away','rgba(0,255,136,0.4)');
-  }else{
-    addLog('Combined: '+combined.toFixed(4)+' - no edge ('+(profit>=0?'+':'')+profit.toFixed(4)+')','rgba(0,255,136,0.18)');
-  }
-  updateStats();
-  if(scans>=3)updateAnalysis();
+
+  var marketPromise = currentTokenIds
+    ? Promise.resolve(currentTokenIds)
+    : findMarket().then(function(t){currentTokenIds=t;return t;});
+
+  marketPromise
+    .then(function(tokenData){
+      addLog('Market: '+tokenData.title,'rgba(0,255,136,0.45)');
+      return Promise.all([
+        fetchJSON(CLOB+'/book?token_id='+tokenData.yesId),
+        fetchJSON(CLOB+'/book?token_id='+tokenData.noId)
+      ]).then(function(books){
+        var yAsks=(books[0].asks||[]).sort(function(a,b){return parseFloat(a.price)-parseFloat(b.price);});
+        var nAsks=(books[1].asks||[]).sort(function(a,b){return parseFloat(a.price)-parseFloat(b.price);});
+        if(!yAsks.length||!nAsks.length){
+          // Market expired, reset so we find next one
+          currentTokenIds=null;
+          addLog('Market expired - finding next window...','#ffe44d');
+          updateStats();return;
+        }
+        var yesAsk=parseFloat(yAsks[0].price);
+        var noAsk=parseFloat(nAsks[0].price);
+        checked++;
+        var combined=yesAsk+noAsk;
+        var profit=parseFloat((1.0-combined).toFixed(6));
+        var isArb=profit>=0.01;
+        var isClose=profit>0&&profit<0.01;
+
+        document.getElementById('yesP').textContent=yesAsk.toFixed(4);
+        document.getElementById('noP').textContent=noAsk.toFixed(4);
+        var cEl=document.getElementById('combP');
+        cEl.textContent=combined.toFixed(4);
+        cEl.style.color=isArb?'#ffe44d':combined<1.0?'#00ff88':'#ff4444';
+        var pEl=document.getElementById('profP');
+        pEl.textContent=(profit>=0?'+':'')+profit.toFixed(4);
+        pEl.style.color=isArb?'#ffe44d':profit>0?'#00ff88':'#ff4444';
+
+        var trig=document.getElementById('triggerBox');
+        if(isArb){trig.classList.add('arb');setTimeout(function(){trig.classList.remove('arb');},700);}
+
+        if(isArb){
+          found++;totalProfit+=profit;bestSpread=Math.max(bestSpread,profit);
+          var oBox=document.getElementById('oppBox');
+          if(oBox.firstChild&&oBox.firstChild.style&&oBox.firstChild.style.textAlign==='center')oBox.innerHTML='';
+          var el=document.createElement('div');
+          el.className='opp-entry';
+          el.innerHTML='<div style="display:flex;justify-content:space-between"><span style="color:#ffe44d;font-weight:bold">ARB +$'+profit.toFixed(4)+' = $'+(profit*50).toFixed(3)+' per $50 side</span><span style="opacity:0.4">'+ts()+'</span></div>'
+            +'<div style="opacity:0.55;margin-top:2px">YES '+yesAsk.toFixed(4)+' + NO '+noAsk.toFixed(4)+' = '+combined.toFixed(4)+'</div>'
+            +'<div style="opacity:0.3;font-size:8px;margin-top:1px">'+tokenData.title+'</div>';
+          oBox.insertBefore(el,oBox.firstChild);
+          addLog('ARB FOUND! +$'+profit.toFixed(4)+' profit | $'+(profit*50).toFixed(3)+' per $50 side','#ffe44d');
+        } else if(isClose){
+          missed++;
+          addLog('Near miss: '+combined.toFixed(4)+' combined - $'+Math.abs(profit).toFixed(4)+' away','rgba(0,255,136,0.4)');
+        } else {
+          addLog('Combined: '+combined.toFixed(4)+' - no edge ('+(profit>=0?'+':'')+profit.toFixed(4)+')','rgba(0,255,136,0.18)');
+        }
+        updateStats();
+        if(scans>=3)updateAnalysis();
+      });
+    })
+    .catch(function(e){
+      currentTokenIds=null;
+      addLog('Error: '+e.message+' - retrying next scan','rgba(255,100,100,0.6)');
+      updateStats();
+    });
 }
 function updateStats(){
   var rt=startTime?Math.floor((Date.now()-startTime)/60000)+'m':'--';
@@ -231,15 +262,15 @@ function updateAnalysis(){
   box.style.display='block';
   var hr=checked>0?(found/checked)*100:0;
   var avg=found>0?totalProfit/found:0;
-  if(found===0){msg.style.color='#ff6666';msg.textContent='No 1cent+ opportunities in '+scans+' scans. Market is efficient right now. Keep scanning - run for 2-4 hours minimum for good data.';}
-  else if(hr<2){msg.style.color='#ffe44d';msg.textContent='Low hit rate ('+hr.toFixed(1)+'%) - edge exists but rare. At $50/side avg: $'+(avg*50).toFixed(3)+'/trade. Need automation at volume.';}
-  else if(hr<10){msg.style.color='#00ff88';msg.textContent='Moderate hit rate ('+hr.toFixed(1)+'%). Looks viable with automation. Avg spread: $'+avg.toFixed(4)+' Est. daily @$50/side: ~$'+(found/scans*48*avg*50).toFixed(2);}
+  if(found===0){msg.style.color='#ff6666';msg.textContent='No 1cent+ opportunities in '+scans+' scans. Market is efficient right now. Keep scanning - run 2-4 hours for good data.';}
+  else if(hr<2){msg.style.color='#ffe44d';msg.textContent='Low hit rate ('+hr.toFixed(1)+'%) - edge exists but rare. At $50/side avg: $'+(avg*50).toFixed(3)+'/trade.';}
+  else if(hr<10){msg.style.color='#00ff88';msg.textContent='Moderate hit rate ('+hr.toFixed(1)+'%). Viable with automation. Est. daily @$50/side: ~$'+(found/scans*48*avg*50).toFixed(2);}
   else{msg.style.color='#ffe44d';msg.textContent='STRONG hit rate ('+hr.toFixed(1)+'%)! '+found+' hits in '+scans+' scans. Est. daily: ~$'+(found/scans*48*avg*50).toFixed(2)+' - BUILD THE BOT.';}
   ftr.textContent='Near misses: '+missed+' - Best spread: '+(bestSpread>0?'$'+bestSpread.toFixed(4):'none')+' - Total potential: $'+(totalProfit*50).toFixed(3)+' @$50/side';
 }
 function startScanner(){
   if(running)return;
-  running=true;startTime=Date.now();
+  running=true;startTime=Date.now();currentTokenIds=null;
   document.getElementById('btnStart').disabled=true;
   document.getElementById('btnStop').disabled=false;
   document.getElementById('logLive').style.display='inline';
@@ -247,13 +278,13 @@ function startScanner(){
   document.getElementById('liveLabel').textContent='LIVE';
   document.getElementById('logBox').innerHTML='';
   addLog('ARB 5 MIN BTC scanner started','#00e5ff');
-  addLog('Scanning every 15s for YES+NO less than $0.99','rgba(0,255,136,0.5)');
+  addLog('Scanning every 15s - watching for YES+NO less than $0.99','rgba(0,255,136,0.5)');
   scanOnce();
   timer=setInterval(scanOnce,INTERVAL_MS);
 }
 function stopScanner(){
   if(!running)return;
-  running=false;clearInterval(timer);
+  running=false;clearInterval(timer);currentTokenIds=null;
   document.getElementById('btnStart').disabled=false;
   document.getElementById('btnStop').disabled=true;
   document.getElementById('logLive').style.display='none';
