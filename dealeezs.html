@@ -1,0 +1,1682 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealeezs – Boston's Cheapest Eats</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ─────────────────────────────── */
+    :root {
+      --orange:   #FF6B35;
+      --orange-d: #E55520;
+      --navy:     #0D1B2A;
+      --navy-l:   #1A2E42;
+      --yellow:   #FFD166;
+      --green:    #06D6A0;
+      --red:      #EF233C;
+      --bg:       #F2F4F7;
+      --panel:    #FFFFFF;
+      --border:   #E2E8F0;
+      --text:     #1E293B;
+      --muted:    #64748B;
+      --shadow:   0 2px 14px rgba(0,0,0,.10);
+      --radius:   12px;
+    }
+
+    /* ── RESET ──────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────── */
+    header {
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 18px;
+      height: 58px;
+      flex-shrink: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--orange); }
+    .logo small {
+      font-size: .65rem;
+      font-weight: 600;
+      color: var(--yellow);
+      display: block;
+      line-height: 1;
+      margin-top: -2px;
+      letter-spacing: .5px;
+    }
+
+    .city-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px;
+      padding: 5px 14px 5px 10px;
+      cursor: pointer;
+      font-size: .85rem;
+      font-weight: 700;
+      color: #fff;
+      transition: background .2s;
+      position: relative;
+    }
+    .city-pill:hover { background: rgba(255,255,255,.18); }
+    .city-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+
+    /* City dropdown */
+    .city-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-width: 200px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      z-index: 9999;
+    }
+    .city-dropdown.open { display: block; }
+    .city-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: background .15s;
+    }
+    .city-item:hover { background: var(--bg); }
+    .city-item.active { color: var(--orange); }
+    .city-badge {
+      margin-left: auto;
+      font-size: .68rem;
+      font-weight: 800;
+      background: var(--yellow);
+      color: var(--navy);
+      border-radius: 30px;
+      padding: 2px 8px;
+    }
+    .city-badge.soon { background: var(--border); color: var(--muted); }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px;
+      padding: 6px 14px;
+      flex: 1;
+      max-width: 280px;
+    }
+    .header-search input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      width: 100%;
+    }
+    .header-search input::placeholder { color: rgba(255,255,255,.5); }
+    .header-search i { color: rgba(255,255,255,.6); }
+
+    .header-filters {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+    .filter-chip {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .filter-chip:hover, .filter-chip.active { background: var(--orange); border-color: var(--orange); }
+
+    .btn-add {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background .2s, transform .1s;
+    }
+    .btn-add:hover { background: var(--orange-d); transform: scale(1.03); }
+
+    /* ── INFLATION TICKER ───────────────────── */
+    .ticker {
+      background: var(--orange);
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 5px 0;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .ticker-inner {
+      display: flex;
+      gap: 60px;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes ticker { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+    .ticker-item { display: inline-flex; align-items: center; gap: 8px; }
+    .ticker-item i { font-size: .9rem; }
+
+    /* ── MAIN BODY ──────────────────────────── */
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── PANELS ─────────────────────────────── */
+    .panel {
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* LEFT – Rankings */
+    .panel-left {
+      width: 270px;
+      border-right: 1px solid var(--border);
+    }
+
+    /* RIGHT – Verify feed */
+    .panel-right {
+      width: 290px;
+      border-left: 1px solid var(--border);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .panel-title {
+      font-weight: 800;
+      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .panel-title i { color: var(--orange); font-size: 1rem; }
+    .panel-badge {
+      font-size: .7rem;
+      font-weight: 800;
+      background: var(--orange);
+      color: #fff;
+      border-radius: 30px;
+      padding: 2px 9px;
+    }
+    .panel-scroll { overflow-y: auto; flex: 1; }
+    .panel-scroll::-webkit-scrollbar { width: 4px; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── RANK CARD ──────────────────────────── */
+    .rank-card {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .rank-card:hover, .rank-card.active { background: #FFF5F0; }
+    .rank-num {
+      font-size: .8rem;
+      font-weight: 900;
+      color: var(--muted);
+      width: 22px;
+      flex-shrink: 0;
+    }
+    .rank-num.gold   { color: #F59E0B; }
+    .rank-num.silver { color: #94A3B8; }
+    .rank-num.bronze { color: #C97B4B; }
+    .rank-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name {
+      font-size: .88rem;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rank-sub {
+      font-size: .73rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .rank-right { text-align: right; flex-shrink: 0; }
+    .rank-price {
+      font-size: .88rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .rank-score {
+      font-size: .72rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    /* ── VERIFY CARD ────────────────────────── */
+    .verify-card {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .verify-card:hover { background: #F8FAFF; }
+    .verify-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-bottom: 8px;
+    }
+    .verify-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .verify-name {
+      font-size: .86rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .verify-meta {
+      font-size: .72rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 1px;
+    }
+    .new-badge {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: .65rem;
+      font-weight: 900;
+      background: var(--green);
+      color: var(--navy);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+    .verify-actions {
+      display: flex;
+      gap: 7px;
+    }
+    .btn-verify {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 0;
+      font-family: 'Nunito', sans-serif;
+      font-size: .77rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-verify.yes { background: #ECFDF5; color: #059669; }
+    .btn-verify.yes:hover { background: var(--green); color: #fff; }
+    .btn-verify.no  { background: #FEF2F2; color: var(--red); }
+    .btn-verify.no:hover  { background: var(--red); color: #fff; }
+    .verify-price {
+      font-size: .85rem;
+      font-weight: 900;
+      color: var(--orange);
+      margin-left: auto;
+      align-self: center;
+    }
+
+    /* ── MAP ────────────────────────────────── */
+    #map {
+      flex: 1;
+      z-index: 1;
+    }
+
+    /* ── PRICE PINS ─────────────────────────── */
+    .price-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: .78rem;
+      font-weight: 800;
+      color: #fff;
+      padding: 4px 9px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      position: relative;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .price-pin:hover { transform: scale(1.12); }
+    .price-pin::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid;
+      border-top-color: inherit;
+    }
+    /* color helpers applied via js */
+    .pin-green  { background: #059669; }
+    .pin-green::after  { border-top-color: #059669; }
+    .pin-yellow { background: #D97706; }
+    .pin-yellow::after { border-top-color: #D97706; }
+    .pin-orange { background: #FF6B35; }
+    .pin-orange::after { border-top-color: #FF6B35; }
+    .pin-red    { background: #DC2626; }
+    .pin-red::after    { border-top-color: #DC2626; }
+    .pin-rank {
+      font-size: .6rem;
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: var(--yellow);
+      color: var(--navy);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    /* ── MAP POPUP ──────────────────────────── */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--radius) !important;
+      box-shadow: 0 4px 24px rgba(0,0,0,.18) !important;
+      padding: 0 !important;
+      overflow: hidden;
+    }
+    .leaflet-popup-content { margin: 0 !important; width: 260px !important; }
+    .leaflet-popup-tip-container { display: none; }
+
+    .popup-wrap {}
+    .popup-img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      display: block;
+    }
+    .popup-img-placeholder {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #FFF5F0, #FFE8DC);
+    }
+    .popup-body { padding: 13px 14px 12px; }
+    .popup-name {
+      font-weight: 800;
+      font-size: .97rem;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .popup-dish {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .popup-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 9px;
+      flex-wrap: wrap;
+    }
+    .popup-price {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--orange);
+    }
+    .popup-tag {
+      background: #F1F5F9;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .popup-verified {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .73rem;
+      font-weight: 700;
+      color: #059669;
+    }
+    .popup-verified i { font-size: .85rem; }
+    .popup-score {
+      margin-left: auto;
+      font-size: .8rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .popup-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .popup-btn {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 0;
+      font-family: 'Nunito', sans-serif;
+      font-size: .8rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all .2s;
+    }
+    .popup-btn.up   { background: #ECFDF5; color: #059669; }
+    .popup-btn.up:hover { background: var(--green); color: #fff; }
+    .popup-btn.flag { background: #FEF2F2; color: var(--red); }
+    .popup-btn.flag:hover { background: var(--red); color: #fff; }
+    .popup-btn.share { background: #EFF6FF; color: #2563EB; }
+    .popup-btn.share:hover { background: #2563EB; color: #fff; }
+
+    /* ── MODAL ──────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 5000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--panel);
+      border-radius: 18px;
+      width: 500px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,.3);
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from { opacity:0; transform:translateY(30px)} to { opacity:1; transform:translateY(0)} }
+    .modal-header {
+      background: var(--navy);
+      padding: 18px 20px;
+      border-radius: 18px 18px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-header h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .modal-header p {
+      font-size: .78rem;
+      color: rgba(255,255,255,.65);
+      margin-top: 2px;
+    }
+    .modal-close {
+      margin-left: auto;
+      background: rgba(255,255,255,.15);
+      border: none;
+      border-radius: 8px;
+      width: 30px;
+      height: 30px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.25); }
+    .modal-body { padding: 20px; }
+    .form-row { display: flex; gap: 12px; }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .form-group label {
+      font-size: .8rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--orange); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .scout-tip {
+      background: linear-gradient(135deg, #FFF5F0, #FFE8DC);
+      border: 1.5px solid #FFD0B5;
+      border-radius: 10px;
+      padding: 11px 13px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .scout-tip i { color: var(--orange); font-size: 1.1rem; margin-top: 1px; }
+    .scout-tip p { font-size: .8rem; font-weight: 700; color: var(--navy); line-height: 1.5; }
+    .scout-tip strong { color: var(--orange); }
+    .btn-submit {
+      width: 100%;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-family: 'Poppins', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-submit:hover { background: var(--orange-d); transform: scale(1.01); }
+
+    /* ── TOAST ──────────────────────────────── */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: .85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      animation: fadeInUp .3s ease;
+      max-width: 320px;
+    }
+    .toast i { color: var(--green); font-size: 1.1rem; }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── STATS BAR (inside left panel footer) */
+    .panel-stats {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1.1;
+    }
+    .stat-lbl {
+      font-size: .65rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    /* ── SCOUT POINTS WIDGET ─────────────────  */
+    .scout-widget {
+      margin: 10px 14px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-l));
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      flex-shrink: 0;
+    }
+    .scout-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+    .scout-avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+    .scout-name { font-size: .82rem; font-weight: 800; color: #fff; }
+    .scout-tier {
+      font-size: .68rem;
+      font-weight: 800;
+      color: var(--yellow);
+      background: rgba(255,209,102,.15);
+      padding: 1px 7px;
+      border-radius: 20px;
+    }
+    .scout-pts {
+      margin-left: auto;
+      font-size: .8rem;
+      font-weight: 900;
+      color: var(--yellow);
+    }
+    .scout-bar-wrap {
+      background: rgba(255,255,255,.12);
+      border-radius: 30px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .scout-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+      border-radius: 30px;
+      transition: width .5s ease;
+    }
+    .scout-bar-lbl {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: .65rem;
+      color: rgba(255,255,255,.5);
+      font-weight: 700;
+    }
+
+    /* ── NEIGHBORHOOD TABS ───────────────────  */
+    .neigh-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 14px;
+      overflow-x: auto;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .neigh-tabs::-webkit-scrollbar { display: none; }
+    .neigh-tab {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: .75rem;
+      font-weight: 800;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+    .neigh-tab:hover, .neigh-tab.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+
+    /* ── RIGHT PANEL HEADER SECTION ──────────── */
+    .verify-section-header {
+      padding: 9px 14px 8px;
+      font-size: .72rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+      flex-shrink: 0;
+    }
+
+    /* ── MAP REGION BADGE ─────────────────────  */
+    .region-badge {
+      background: var(--navy);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: .68rem;
+      font-weight: 800;
+      border-radius: 6px;
+      padding: 3px 9px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+      white-space: nowrap;
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .panel-left { display: none; }
+      .panel-right { width: 260px; }
+    }
+    @media (max-width: 640px) {
+      .panel-right { display: none; }
+      .header-filters { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<header>
+  <div class="logo">
+    Deal<span>eezs</span>
+    <small>🍜 EAT CHEAP. EAT WELL.</small>
+  </div>
+
+  <!-- City selector -->
+  <div class="city-pill" id="cityPill" onclick="toggleCityDropdown()">
+    <span class="city-dot"></span>
+    Boston, MA
+    <i class="bi bi-chevron-down" style="font-size:.7rem;margin-left:2px"></i>
+    <div class="city-dropdown" id="cityDropdown">
+      <div class="city-item active"><i class="bi bi-geo-alt-fill"></i> Boston, MA <span class="city-badge">LIVE</span></div>
+      <div class="city-item" onclick="comingSoon('New York, NY')"><i class="bi bi-geo-alt"></i> New York, NY <span class="city-badge soon">SOON</span></div>
+      <div class="city-item" onclick="comingSoon('Chicago, IL')"><i class="bi bi-geo-alt"></i> Chicago, IL <span class="city-badge soon">SOON</span></div>
+      <div class="city-item" onclick="comingSoon('Los Angeles, CA')"><i class="bi bi-geo-alt"></i> Los Angeles, CA <span class="city-badge soon">SOON</span></div>
+      <div class="city-item" onclick="comingSoon('Philadelphia, PA')"><i class="bi bi-geo-alt"></i> Philadelphia, PA <span class="city-badge soon">SOON</span></div>
+      <div style="padding:10px 16px;border-top:1px solid var(--border)">
+        <div style="font-size:.73rem;font-weight:700;color:var(--muted)">
+          <i class="bi bi-people-fill" style="color:var(--orange)"></i>
+          50 sign-ups → your city goes live
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="header-search">
+    <i class="bi bi-search"></i>
+    <input type="text" id="searchInput" placeholder="Search deals, spots, dishes…" oninput="handleSearch()" />
+  </div>
+
+  <!-- Price filters -->
+  <div class="header-filters">
+    <button class="filter-chip active" onclick="filterByPrice(null, this)">All</button>
+    <button class="filter-chip" onclick="filterByPrice(5, this)">Under $5</button>
+    <button class="filter-chip" onclick="filterByPrice(8, this)">Under $8</button>
+    <button class="filter-chip" onclick="filterByPrice(12, this)">Under $12</button>
+  </div>
+
+  <!-- Add spot -->
+  <button class="btn-add" onclick="openModal()">
+    <i class="bi bi-plus-circle-fill"></i> Add a Spot
+  </button>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <!-- duplicated by JS for infinite scroll -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     APP BODY
+═══════════════════════════════════════════ -->
+<div class="app-body">
+
+  <!-- ── LEFT PANEL : Rankings ────────────── -->
+  <div class="panel panel-left">
+    <div class="panel-header">
+      <div class="panel-title"><i class="bi bi-trophy-fill"></i> Rankings</div>
+      <span class="panel-badge" id="rankCount">0 spots</span>
+    </div>
+
+    <!-- Neighborhood tabs -->
+    <div class="neigh-tabs">
+      <div class="neigh-tab active" onclick="filterNeigh('All', this)">All</div>
+      <div class="neigh-tab" onclick="filterNeigh('North End', this)">North End</div>
+      <div class="neigh-tab" onclick="filterNeigh('Downtown', this)">Downtown</div>
+      <div class="neigh-tab" onclick="filterNeigh('Cambridge', this)">Cambridge</div>
+      <div class="neigh-tab" onclick="filterNeigh('Jamaica Plain', this)">JP</div>
+      <div class="neigh-tab" onclick="filterNeigh('Dorchester', this)">Dorchester</div>
+      <div class="neigh-tab" onclick="filterNeigh('Roxbury', this)">Roxbury</div>
+      <div class="neigh-tab" onclick="filterNeigh('Brookline', this)">Brookline</div>
+      <div class="neigh-tab" onclick="filterNeigh('Hyde Park', this)">Hyde Park</div>
+      <div class="neigh-tab" onclick="filterNeigh('Quincy', this)">Quincy</div>
+      <div class="neigh-tab" onclick="filterNeigh('Bay Village', this)">Bay Village</div>
+    </div>
+
+    <div class="panel-scroll" id="rankList"></div>
+
+    <!-- Scout widget -->
+    <div class="scout-widget">
+      <div class="scout-top">
+        <div class="scout-avatar">🍜</div>
+        <div>
+          <div class="scout-name">Guest Scout</div>
+          <div class="scout-tier">🥄 Scraper</div>
+        </div>
+        <div class="scout-pts" id="userPts">0 pts</div>
+      </div>
+      <div class="scout-bar-wrap">
+        <div class="scout-bar" id="scoutBar" style="width:0%"></div>
+      </div>
+      <div class="scout-bar-lbl">
+        <span id="ptsLabel">0 / 50 pts to Noodle Scout</span>
+        <span id="tierNext">🍜</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="panel-stats">
+      <div class="stat-item">
+        <div class="stat-num" id="statSpots">0</div>
+        <div class="stat-lbl">Spots</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statVerified">0</div>
+        <div class="stat-lbl">Verified</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statSaved">$0</div>
+        <div class="stat-lbl">Avg Saved</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAP ──────────────────────────────── -->
+  <div id="map"></div>
+
+  <!-- ── RIGHT PANEL : Verify Feed ────────── -->
+  <div class="panel panel-right">
+    <div class="panel-header">
+      <div class="panel-title"><i class="bi bi-patch-check-fill"></i> Verify Stand</div>
+      <span class="panel-badge" style="background:var(--red)" id="verifyCount">0 new</span>
+    </div>
+    <div class="verify-section-header">
+      <span class="live-dot"></span> RECENTLY ADDED · NEEDS YOUR VOTE
+    </div>
+    <div class="panel-scroll" id="verifyFeed"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADD SPOT MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2><i class="bi bi-pin-map-fill" style="color:var(--orange)"></i> Add a Cheap Spot</h2>
+        <p>Share a deal and earn Scout Points 🏆</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="scout-tip">
+        <i class="bi bi-star-fill"></i>
+        <p>You earn <strong>+10 points</strong> for adding a spot.<br>
+        If 5 people verify it → <strong>+20 bonus points!</strong><br>
+        Top scouts win monthly prizes 🎁</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label>Restaurant / Spot Name *</label>
+          <input type="text" id="f_name" placeholder="e.g. Gourmet Dumpling House" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>Category</label>
+          <select id="f_cat">
+            <option value="🍜">🍜 Asian</option>
+            <option value="🌮">🌮 Mexican</option>
+            <option value="🍕">🍕 Pizza/Italian</option>
+            <option value="🥙">🥙 Middle Eastern</option>
+            <option value="🍔">🍔 American</option>
+            <option value="🍱">🍱 Japanese</option>
+            <option value="🍛">🍛 Indian</option>
+            <option value="☕">☕ Café/Bakery</option>
+            <option value="🥗">🥗 Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>What's the Deal? (dish / offer) *</label>
+        <input type="text" id="f_dish" placeholder="e.g. Steamed dumplings (8 pcs) — best in Chinatown" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price ($) *</label>
+          <input type="number" id="f_price" placeholder="6.00" step="0.50" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Neighborhood *</label>
+          <select id="f_neigh">
+            <option>North End</option>
+            <option>Downtown</option>
+            <option>Cambridge</option>
+            <option>Jamaica Plain</option>
+            <option>Dorchester</option>
+            <option>Roxbury</option>
+            <option>Brookline</option>
+            <option>Hyde Park</option>
+            <option>Quincy</option>
+            <option>Bay Village</option>
+            <option>Allston</option>
+            <option>Chinatown</option>
+            <option>Mission Hill</option>
+            <option>Fenway</option>
+            <option>Back Bay</option>
+            <option>South End</option>
+            <option>East Boston</option>
+            <option>Somerville</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Hours</label>
+          <input type="text" id="f_hours" placeholder="11am – 9pm daily" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Address (optional)</label>
+        <input type="text" id="f_addr" placeholder="123 Beach St, Boston MA" />
+      </div>
+
+      <div class="form-group">
+        <label>Pro tip for fellow deal hunters</label>
+        <textarea id="f_tip" placeholder="What to order, when to go, cash only?…"></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="submitSpot()">
+        <i class="bi bi-send-fill"></i> Drop This Deal — Earn +10 Points
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+// All 10 spots verified by The Boston Globe, May 2026
+// Source: bostonglobe.com/2026/05/13/lifestyle/boston-restaurant-meals-10-dollars/
+const SEED_SPOTS = [
+  {
+    id: 1, name: "Galleria Umberto", cat: "🍕",
+    dish: "Sicilian pizza slice", price: 2.25,
+    neighborhood: "North End", lat: 42.3647, lng: -71.0542,
+    score: 94, votes: 312, verified: true, verifyCount: 201,
+    address: "289 Hanover St, North End",
+    tip: "Cash only. Lunch only — closes when food runs out (often by 2pm). Line out the door is normal and worth it. James Beard America's Classic 2018.",
+    hours: "Mon–Sat 11am until sold out", addedDate: "2026-05-13"
+  },
+  {
+    id: 2, name: "D Coal Pot", cat: "🫓",
+    dish: "Doubles — curried chickpeas on turmeric flatbread", price: 3,
+    neighborhood: "Hyde Park", lat: 42.2563, lng: -71.1232,
+    score: 88, votes: 178, verified: true, verifyCount: 143,
+    address: "984 Hyde Park Ave, Hyde Park",
+    tip: "Trinidadian street food. One doubles = light lunch, two = filling. Add tamarind sauce and kuchela (green mango relish). Lovely garden with picnic tables.",
+    hours: "Check Instagram for hours", addedDate: "2026-05-13"
+  },
+  {
+    id: 3, name: "Maruichi Select", cat: "🍙",
+    dish: "Grab-and-go onigiri (Japanese rice balls)", price: 3.25,
+    neighborhood: "Brookline", lat: 42.3395, lng: -71.1218,
+    score: 76, votes: 144, verified: true, verifyCount: 98,
+    address: "299 Harvard St, Coolidge Corner, Brookline",
+    tip: "Get the grab-and-go version — special 2-layer packaging keeps seaweed crispy. Fillings: salmon, pickled plum, fried chicken, braised pork. $9.99 set includes rice ball + miso soup + tea.",
+    hours: "Daily — check hours on Instagram @maruichiselectbrookline", addedDate: "2026-05-13"
+  },
+  {
+    id: 4, name: "Mike & Patty's", cat: "🍳",
+    dish: "Classic fried egg & American cheese sandwich", price: 6.50,
+    neighborhood: "Bay Village", lat: 42.3492, lng: -71.0688,
+    address: "12 Church St, Bay Village",
+    score: 71, votes: 134, verified: true, verifyCount: 87,
+    tip: "Carolina Caviar (egg + sausage + pimento cheese) is $9.50 and worth every cent. English muffin baked in-house at their bakery Flourhouse. Also in JP, Somerville, Newton.",
+    hours: "Daily from early morning", addedDate: "2026-05-13"
+  },
+  {
+    id: 5, name: "Rubato", cat: "🍱",
+    dish: "Steamed rice rolls (ji cheung fun)", price: 6,
+    neighborhood: "Quincy", lat: 42.2529, lng: -71.0025,
+    address: "412 Hancock St, Quincy",
+    score: 67, votes: 112, verified: true, verifyCount: 74,
+    tip: "Hong Kong-style café by Top Chef/Chopped chef Laurence Louie. Get the simplest rice roll: sesame, hoisin, scallion, cilantro. Or the Rubato fun fun with brisket & curried fish balls.",
+    hours: "Check rubato-food.com for hours", addedDate: "2026-05-13"
+  },
+  {
+    id: 6, name: "Banh Mi Ba Le", cat: "🥖",
+    dish: "Banh mi sandwich (grilled meat or tofu)", price: 7.50,
+    neighborhood: "Dorchester", lat: 42.3072, lng: -71.0700,
+    address: "1052 Dorchester Ave, Dorchester",
+    score: 63, votes: 198, verified: true, verifyCount: 121,
+    tip: "Bread baked fresh daily — that's the secret. Crusty baguette-style roll with pâté, pickled veg, cilantro, house mayo. Tofu version available. Also in Quincy and Malden.",
+    hours: "Daily", addedDate: "2026-05-13"
+  },
+  {
+    id: 7, name: "Viva Mi Arepa", cat: "🫔",
+    dish: "Venezuelan arepas (gluten-free)", price: 7.50,
+    neighborhood: "Jamaica Plain", lat: 42.3138, lng: -71.1147,
+    address: "268 Centre St, Jamaica Plain (near Jackson Square T)",
+    score: 58, votes: 97, verified: true, verifyCount: 66,
+    tip: "Try chicken salad + avocado or shredded beef + sweet plantains. Naturally gluten-free. Also serves breakfast, empanadas, and tropical juices.",
+    hours: "Daily", addedDate: "2026-05-13"
+  },
+  {
+    id: 8, name: "Ideal Sub Shop", cat: "🥪",
+    dish: "Large Italian combo or turkey sub (~14 inch)", price: 8.65,
+    neighborhood: "Roxbury", lat: 42.3285, lng: -71.0838,
+    address: "522 Dudley St, Roxbury",
+    score: 54, votes: 143, verified: true, verifyCount: 89,
+    tip: "Cash only. Closes at 3–3:30pm. Owned by Cape Verdean family — try the C.V. tuna sub or canja chicken-rice soup ($5 with bread). Lines are long but fast.",
+    hours: "Opens early morning, closes 3–3:30pm", addedDate: "2026-05-13"
+  },
+  {
+    id: 9, name: "Gene's Chinese Flatbread Café", cat: "🍜",
+    dish: "Hand-pulled garlic noodles", price: 9.40,
+    neighborhood: "Downtown", lat: 42.3524, lng: -71.0607,
+    address: "86 Bedford St, Downtown Boston",
+    score: 49, votes: 88, verified: true, verifyCount: 57,
+    tip: "Don't eat before a date — heavy on garlic (in the best way). Flatbread sandwiches under $7. Cumin lamb noodles are incredible if you go a little over budget.",
+    hours: "Daily — check genescafeboston.com", addedDate: "2026-05-13"
+  },
+  {
+    id: 10, name: "Punjabi Dhaba", cat: "🍛",
+    dish: "Secret Quick 'n' Tasty Lunch (online order only)", price: 10.45,
+    neighborhood: "Cambridge", lat: 42.3736, lng: -71.1003,
+    address: "225 Hampshire St, Inman Square, Cambridge",
+    score: 44, votes: 76, verified: true, verifyCount: 48,
+    tip: "⚠️ ORDER ONLINE ONLY. Available Mon–Sat noon–4pm. Includes veggie entrée (chickpea curry, dal, or veg curry) + rice or naan. Cash only at counter for regular menu. Serving no-frills Indian since 1998.",
+    hours: "Secret lunch: Mon–Sat 12pm–4pm", addedDate: "2026-05-13"
+  }
+];
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let spots = [];
+let markers = {};
+let map;
+let activeFilter = null;
+let activeNeigh = 'All';
+let userPoints = 0;
+
+const TIERS = [
+  { name: "🥄 Scraper",         pts: 0   },
+  { name: "🍜 Noodle Scout",    pts: 50  },
+  { name: "🍖 Veteran Forager", pts: 150 },
+  { name: "🏆 Deal Legend",     pts: 350 }
+];
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+function init() {
+  // Load from localStorage
+  const saved = JSON.parse(localStorage.getItem('dealeezs_spots') || '[]');
+  const savedPts = parseInt(localStorage.getItem('dealeezs_pts') || '0');
+  spots = [...SEED_SPOTS, ...saved];
+  userPoints = savedPts;
+
+  initMap();
+  renderAll();
+  renderTicker();
+  updateScoutWidget();
+}
+
+// ─────────────────────────────────────────────
+//  MAP
+// ─────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', {
+    center: [42.3350, -71.0800],
+    zoom: 12,
+    zoomControl: true
+  });
+
+  // CartoDB Light tiles (free, clean)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  renderMarkers();
+}
+
+function pinClass(price) {
+  if (price <= 5)  return 'pin-green';
+  if (price <= 8)  return 'pin-yellow';
+  if (price <= 12) return 'pin-orange';
+  return 'pin-red';
+}
+
+function createMarkerIcon(spot, rank) {
+  const cls = pinClass(spot.price);
+  const rankBadge = rank <= 3 ? `<div class="pin-rank">#${rank}</div>` : '';
+  return L.divIcon({
+    className: '',
+    html: `<div class="price-pin ${cls}" style="position:relative">
+             ${rankBadge}$${spot.price % 1 === 0 ? spot.price : spot.price.toFixed(2)}
+           </div>`,
+    iconSize:   [64, 32],
+    iconAnchor: [32, 38],
+    popupAnchor:[0, -40]
+  });
+}
+
+function renderMarkers() {
+  // Clear old markers
+  Object.values(markers).forEach(m => map.removeLayer(m));
+  markers = {};
+
+  const filtered = getFiltered();
+  const sorted = [...filtered].sort((a, b) => b.score - a.score);
+
+  sorted.forEach((spot, i) => {
+    const rank = i + 1;
+    const marker = L.marker([spot.lat, spot.lng], { icon: createMarkerIcon(spot, rank) });
+    marker.addTo(map);
+    marker.on('click', () => openPopup(spot, rank));
+    markers[spot.id] = marker;
+  });
+
+  // Region badges
+  addRegionBadge([42.3660, -71.0520], 'North End');
+  addRegionBadge([42.3560, -71.0580], 'Downtown');
+  addRegionBadge([42.3750, -71.1020], 'Cambridge');
+  addRegionBadge([42.3160, -71.1120], 'Jamaica Plain');
+  addRegionBadge([42.3100, -71.0680], 'Dorchester');
+  addRegionBadge([42.3300, -71.0820], 'Roxbury');
+  addRegionBadge([42.3410, -71.1200], 'Brookline');
+}
+
+function addRegionBadge(latlng, name) {
+  L.marker(latlng, {
+    icon: L.divIcon({
+      className: '',
+      html: `<div class="region-badge">${name}</div>`,
+      iconSize: [null, null],
+      iconAnchor: [0, 0]
+    }),
+    interactive: false,
+    zIndexOffset: -1000
+  }).addTo(map);
+}
+
+function openPopup(spot, rank) {
+  const verifiedHtml = spot.verified
+    ? `<div class="popup-verified"><i class="bi bi-patch-check-fill"></i> Verified by ${spot.verifyCount} locals</div>`
+    : `<div class="popup-verified" style="color:var(--orange)"><i class="bi bi-clock-fill"></i> Awaiting verification (${spot.verifyCount}/5)</div>`;
+
+  const html = `
+    <div class="popup-wrap">
+      <div class="popup-img-placeholder">${spot.cat}</div>
+      <div class="popup-body">
+        <div class="popup-name">${spot.name}</div>
+        <div class="popup-dish">${spot.dish}</div>
+        <div class="popup-row">
+          <span class="popup-price">$${spot.price % 1 === 0 ? spot.price : spot.price.toFixed(2)}</span>
+          <span class="popup-tag">${spot.neighborhood}</span>
+          <span class="popup-tag">${spot.hours || 'See hours'}</span>
+        </div>
+        <div class="popup-row">
+          ${verifiedHtml}
+          <span class="popup-score">+${spot.score}</span>
+        </div>
+        ${spot.tip ? `<div style="font-size:.76rem;color:var(--muted);font-weight:600;margin-top:4px;line-height:1.5">💡 ${spot.tip}</div>` : ''}
+        <div class="popup-actions">
+          <button class="popup-btn up" onclick="upvoteSpot(${spot.id})"><i class="bi bi-hand-thumbs-up-fill"></i> Legit</button>
+          <button class="popup-btn share" onclick="shareSpot('${spot.name}')"><i class="bi bi-share-fill"></i></button>
+          <button class="popup-btn flag" onclick="flagSpot(${spot.id})"><i class="bi bi-flag-fill"></i></button>
+        </div>
+      </div>
+    </div>`;
+
+  L.popup({ maxWidth: 280, minWidth: 260 })
+    .setLatLng([spot.lat, spot.lng])
+    .setContent(html)
+    .openOn(map);
+}
+
+// ─────────────────────────────────────────────
+//  RANKINGS PANEL
+// ─────────────────────────────────────────────
+function renderRankings() {
+  const filtered = getFiltered();
+  const sorted = [...filtered].sort((a, b) => b.score - a.score);
+  const el = document.getElementById('rankList');
+
+  document.getElementById('rankCount').textContent = `${sorted.length} spot${sorted.length !== 1 ? 's' : ''}`;
+  document.getElementById('statSpots').textContent = spots.length;
+  document.getElementById('statVerified').textContent = spots.filter(s => s.verified).length;
+
+  const avgPrice = spots.reduce((a, b) => a + b.price, 0) / spots.length;
+  const avgRestaurant = 18; // avg Boston dinner
+  document.getElementById('statSaved').textContent = `$${(avgRestaurant - avgPrice).toFixed(0)}`;
+
+  el.innerHTML = sorted.map((spot, i) => {
+    const rank = i + 1;
+    const numCls = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+    return `
+      <div class="rank-card" onclick="flyTo(${spot.id})">
+        <div class="rank-num ${numCls}">#${rank}</div>
+        <div class="rank-icon" style="background:${rankBg(rank)}">${spot.cat}</div>
+        <div class="rank-info">
+          <div class="rank-name">${spot.name}</div>
+          <div class="rank-sub">${spot.neighborhood} · ${spot.dish.substring(0, 28)}${spot.dish.length > 28 ? '…' : ''}</div>
+        </div>
+        <div class="rank-right">
+          <div class="rank-price">$${spot.price % 1 === 0 ? spot.price : spot.price.toFixed(2)}</div>
+          <div class="rank-score">+${spot.score}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function rankBg(rank) {
+  if (rank === 1) return '#FEF3C7';
+  if (rank === 2) return '#F1F5F9';
+  if (rank === 3) return '#FEF2E8';
+  return '#F8FAFC';
+}
+
+function flyTo(spotId) {
+  const spot = spots.find(s => s.id === spotId);
+  if (!spot) return;
+  map.flyTo([spot.lat, spot.lng], 16, { duration: 0.8 });
+  const rank = [...spots].sort((a, b) => b.score - a.score).findIndex(s => s.id === spotId) + 1;
+  setTimeout(() => openPopup(spot, rank), 900);
+}
+
+// ─────────────────────────────────────────────
+//  VERIFY FEED
+// ─────────────────────────────────────────────
+function renderVerifyFeed() {
+  const recent = [...spots]
+    .sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate))
+    .slice(0, 12);
+
+  document.getElementById('verifyCount').textContent = `${recent.filter(s => !s.verified).length} new`;
+
+  document.getElementById('verifyFeed').innerHTML = recent.map(spot => `
+    <div class="verify-card" onclick="flyTo(${spot.id})">
+      <div class="verify-top">
+        <div class="verify-icon" style="background:#F8FAFC">${spot.cat}</div>
+        <div>
+          <div class="verify-name">${spot.name}</div>
+          <div class="verify-meta">${spot.neighborhood} · ${spot.addedDate}</div>
+        </div>
+        ${!spot.verified ? '<span class="new-badge">NEW</span>' : ''}
+        <div class="verify-price">$${spot.price % 1 === 0 ? spot.price : spot.price.toFixed(2)}</div>
+      </div>
+      <div class="verify-actions">
+        <button class="btn-verify yes" onclick="event.stopPropagation();verifySpot(${spot.id}, true)">
+          <i class="bi bi-check-circle-fill"></i> Still Accurate (${spot.verifyCount})
+        </button>
+        <button class="btn-verify no" onclick="event.stopPropagation();verifySpot(${spot.id}, false)">
+          <i class="bi bi-x-circle-fill"></i> Outdated
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─────────────────────────────────────────────
+//  TICKER
+// ─────────────────────────────────────────────
+function renderTicker() {
+  const items = [
+    '🔥 Inflation up 22% since 2020 — Dealeezs fights back',
+    '🍕 Galleria Umberto, North End — $2.25 Sicilian slice · Cash only · James Beard Classic',
+    '🫓 D Coal Pot, Hyde Park — $3 doubles · Best Trinidadian in Boston',
+    '🍙 Maruichi Select, Brookline — Onigiri from $3.25 · Fresh daily',
+    '🍜 Gene\'s Flatbread Café, Downtown — Hand-pulled garlic noodles $9.40',
+    '💸 Average Boston restaurant meal: $22+. Average Dealeezs deal: $7.',
+    '🥖 Banh Mi Ba Le, Dorchester — Fresh-baked baguette sandwiches from $7.50',
+    '🍛 Punjabi Dhaba secret lunch — $10.45 · Online order only · Mon–Sat noon–4pm',
+    '🫔 Viva Mi Arepa, Jamaica Plain — Gluten-free Venezuelan arepas from $7.50',
+    '🎁 Add a spot → earn Scout Points → win monthly prizes'
+  ];
+  const html = [...items, ...items].map(t =>
+    `<span class="ticker-item"><i class="bi bi-lightning-charge-fill"></i>${t}</span>`
+  ).join('');
+  document.getElementById('ticker').innerHTML = html;
+}
+
+// ─────────────────────────────────────────────
+//  SCOUT / GAMIFICATION
+// ─────────────────────────────────────────────
+function updateScoutWidget() {
+  document.getElementById('userPts').textContent = `${userPoints} pts`;
+
+  let tierIdx = 0;
+  for (let i = TIERS.length - 1; i >= 0; i--) {
+    if (userPoints >= TIERS[i].pts) { tierIdx = i; break; }
+  }
+  const nextTier = TIERS[tierIdx + 1];
+  const ptsInTier = userPoints - TIERS[tierIdx].pts;
+  const ptsNeeded = nextTier ? nextTier.pts - TIERS[tierIdx].pts : 1;
+  const pct = nextTier ? Math.min(100, (ptsInTier / ptsNeeded) * 100) : 100;
+
+  document.getElementById('scoutBar').style.width = pct + '%';
+  if (nextTier) {
+    document.getElementById('ptsLabel').textContent = `${userPoints} / ${nextTier.pts} pts to ${nextTier.name}`;
+    document.getElementById('tierNext').textContent = nextTier.name.split(' ')[0];
+  } else {
+    document.getElementById('ptsLabel').textContent = `${userPoints} pts — MAX TIER 🏆`;
+    document.getElementById('tierNext').textContent = '🏆';
+  }
+}
+
+function awardPoints(pts, msg) {
+  userPoints += pts;
+  localStorage.setItem('dealeezs_pts', userPoints);
+  updateScoutWidget();
+  showToast(`<i class="bi bi-star-fill"></i> +${pts} Scout Points — ${msg}`);
+}
+
+// ─────────────────────────────────────────────
+//  ACTIONS
+// ─────────────────────────────────────────────
+function upvoteSpot(id) {
+  const spot = spots.find(s => s.id === id);
+  if (!spot) return;
+  spot.score += 1;
+  spot.votes += 1;
+  renderAll();
+  awardPoints(2, 'Thanks for voting!');
+}
+
+function verifySpot(id, accurate) {
+  const spot = spots.find(s => s.id === id);
+  if (!spot) return;
+  if (accurate) {
+    spot.verifyCount += 1;
+    if (spot.verifyCount >= 5) spot.verified = true;
+    awardPoints(3, 'Verification earns you 3 pts!');
+  } else {
+    showToast('<i class="bi bi-flag-fill" style="color:var(--red)"></i> Thanks — we\'ll review this spot.');
+  }
+  renderAll();
+}
+
+function flagSpot(id) {
+  showToast('<i class="bi bi-flag-fill" style="color:var(--yellow)"></i> Reported — thanks for keeping Dealeezs accurate!');
+}
+
+function shareSpot(name) {
+  if (navigator.share) {
+    navigator.share({ title: 'Dealeezs', text: `Check out ${name} on Dealeezs — cheap eats in Boston!`, url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('<i class="bi bi-clipboard-check-fill"></i> Link copied — share the deal!');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  FILTERS
+// ─────────────────────────────────────────────
+function getFiltered() {
+  let list = [...spots];
+  if (activeFilter) list = list.filter(s => s.price <= activeFilter);
+  if (activeNeigh !== 'All') list = list.filter(s => s.neighborhood === activeNeigh);
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (q) list = list.filter(s =>
+    s.name.toLowerCase().includes(q) ||
+    s.dish.toLowerCase().includes(q) ||
+    s.neighborhood.toLowerCase().includes(q)
+  );
+  return list;
+}
+
+function filterByPrice(max, btn) {
+  activeFilter = max;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+function filterNeigh(neigh, tab) {
+  activeNeigh = neigh;
+  document.querySelectorAll('.neigh-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderAll();
+}
+
+function handleSearch() { renderAll(); }
+
+function renderAll() {
+  renderRankings();
+  renderMarkers();
+  renderVerifyFeed();
+}
+
+// ─────────────────────────────────────────────
+//  SUBMIT NEW SPOT
+// ─────────────────────────────────────────────
+function submitSpot() {
+  const name  = document.getElementById('f_name').value.trim();
+  const dish  = document.getElementById('f_dish').value.trim();
+  const price = parseFloat(document.getElementById('f_price').value);
+  const neigh = document.getElementById('f_neigh').value;
+  const cat   = document.getElementById('f_cat').value;
+  const tip   = document.getElementById('f_tip').value.trim();
+  const hours = document.getElementById('f_hours').value.trim();
+
+  if (!name || !dish || isNaN(price) || price <= 0) {
+    showToast('<i class="bi bi-exclamation-circle-fill" style="color:var(--yellow)"></i> Fill in name, deal and price!');
+    return;
+  }
+
+  // Neighborhood → approximate coords (Boston center as fallback, jittered)
+  const NEIGH_COORDS = {
+    'North End':   [42.3647, -71.0542],
+    'Downtown':    [42.3583, -71.0567],
+    'Cambridge':   [42.3736, -71.1003],
+    'Jamaica Plain':[42.3138, -71.1147],
+    'Dorchester':  [42.3072, -71.0700],
+    'Roxbury':     [42.3285, -71.0838],
+    'Brookline':   [42.3395, -71.1218],
+    'Hyde Park':   [42.2563, -71.1232],
+    'Quincy':      [42.2529, -71.0025],
+    'Bay Village': [42.3492, -71.0688],
+    'Allston':     [42.3534, -71.1298],
+    'Chinatown':   [42.3519, -71.0624],
+    'Mission Hill':[42.3336, -71.0998],
+    'Fenway':      [42.3456, -71.1003],
+    'Back Bay':    [42.3491, -71.0834],
+    'South End':   [42.3394, -71.0787],
+    'East Boston': [42.3681, -71.0396],
+    'Somerville':  [42.3876, -71.0995],
+    'Other':       [42.3601, -71.0589]
+  };
+  const [baseLat, baseLng] = NEIGH_COORDS[neigh] || [42.3601, -71.0589];
+  const lat = baseLat + (Math.random() - 0.5) * 0.008;
+  const lng = baseLng + (Math.random() - 0.5) * 0.012;
+
+  const newSpot = {
+    id: Date.now(),
+    name, dish, price, cat, tip, hours,
+    neighborhood: neigh,
+    lat, lng,
+    score: 0, votes: 0,
+    verified: false, verifyCount: 0,
+    addedDate: new Date().toISOString().slice(0, 10)
+  };
+
+  spots.push(newSpot);
+
+  // Save user-submitted spots
+  const saved = JSON.parse(localStorage.getItem('dealeezs_spots') || '[]');
+  saved.push(newSpot);
+  localStorage.setItem('dealeezs_spots', JSON.stringify(saved));
+
+  closeModal();
+  renderAll();
+  awardPoints(10, 'Spot added! Share it to get it verified.');
+  map.flyTo([lat, lng], 16, { duration: 1 });
+}
+
+// ─────────────────────────────────────────────
+//  MODAL
+// ─────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+// ─────────────────────────────────────────────
+//  CITY DROPDOWN
+// ─────────────────────────────────────────────
+function toggleCityDropdown() {
+  document.getElementById('cityDropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('cityPill').contains(e.target)) {
+    document.getElementById('cityDropdown').classList.remove('open');
+  }
+});
+function comingSoon(city) {
+  showToast(`<i class="bi bi-geo-alt-fill"></i> ${city} coming soon! Get 50 friends to sign up → we go live.`);
+}
+
+// ─────────────────────────────────────────────
+//  TOAST
+// ─────────────────────────────────────────────
+function showToast(html) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = html;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ─────────────────────────────────────────────
+//  BOOT
+// ─────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
