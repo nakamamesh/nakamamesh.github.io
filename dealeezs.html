@@ -939,13 +939,21 @@
       <div class="neigh-tab" onclick="filterNeigh('North End', this)">North End</div>
       <div class="neigh-tab" onclick="filterNeigh('Downtown', this)">Downtown</div>
       <div class="neigh-tab" onclick="filterNeigh('Cambridge', this)">Cambridge</div>
+      <div class="neigh-tab" onclick="filterNeigh('Somerville', this)">Somerville</div>
       <div class="neigh-tab" onclick="filterNeigh('Jamaica Plain', this)">JP</div>
+      <div class="neigh-tab" onclick="filterNeigh('Fenway', this)">Fenway</div>
+      <div class="neigh-tab" onclick="filterNeigh('South Boston', this)">Southie</div>
+      <div class="neigh-tab" onclick="filterNeigh('East Boston', this)">East Boston</div>
       <div class="neigh-tab" onclick="filterNeigh('Dorchester', this)">Dorchester</div>
       <div class="neigh-tab" onclick="filterNeigh('Roxbury', this)">Roxbury</div>
       <div class="neigh-tab" onclick="filterNeigh('Brookline', this)">Brookline</div>
+      <div class="neigh-tab" onclick="filterNeigh('South End', this)">South End</div>
+      <div class="neigh-tab" onclick="filterNeigh('Brighton', this)">Brighton</div>
+      <div class="neigh-tab" onclick="filterNeigh('Chinatown', this)">Chinatown</div>
+      <div class="neigh-tab" onclick="filterNeigh('Roslindale', this)">Roslindale</div>
+      <div class="neigh-tab" onclick="filterNeigh('Revere', this)">Revere</div>
       <div class="neigh-tab" onclick="filterNeigh('Hyde Park', this)">Hyde Park</div>
       <div class="neigh-tab" onclick="filterNeigh('Quincy', this)">Quincy</div>
-      <div class="neigh-tab" onclick="filterNeigh('Bay Village', this)">Bay Village</div>
     </div>
 
     <div class="panel-scroll" id="rankList"></div>
@@ -1057,24 +1065,30 @@
         <div class="form-group">
           <label>Neighborhood *</label>
           <select id="f_neigh">
-            <option>North End</option>
-            <option>Downtown</option>
-            <option>Cambridge</option>
-            <option>Jamaica Plain</option>
-            <option>Dorchester</option>
-            <option>Roxbury</option>
-            <option>Brookline</option>
-            <option>Hyde Park</option>
-            <option>Quincy</option>
-            <option>Bay Village</option>
             <option>Allston</option>
-            <option>Chinatown</option>
-            <option>Mission Hill</option>
-            <option>Fenway</option>
             <option>Back Bay</option>
-            <option>South End</option>
+            <option>Bay Village</option>
+            <option>Beacon Hill</option>
+            <option>Brighton</option>
+            <option>Cambridge</option>
+            <option>Charlestown</option>
+            <option>Chinatown</option>
+            <option>Dorchester</option>
+            <option>Downtown</option>
             <option>East Boston</option>
+            <option>Fenway</option>
+            <option>Hyde Park</option>
+            <option>Jamaica Plain</option>
+            <option>Mission Hill</option>
+            <option>North End</option>
+            <option>Quincy</option>
+            <option>Revere</option>
+            <option>Roslindale</option>
+            <option>Roxbury</option>
+            <option>Seaport</option>
             <option>Somerville</option>
+            <option>South Boston</option>
+            <option>South End</option>
             <option>Other</option>
           </select>
         </div>
@@ -1204,6 +1218,278 @@ const SEED_SPOTS = [
     score: 44, votes: 76, verified: true, verifyCount: 48,
     tip: "⚠️ ORDER ONLINE ONLY. Available Mon–Sat noon–4pm. Includes veggie entrée (chickpea curry, dal, or veg curry) + rice or naan. Cash only at counter for regular menu. Serving no-frills Indian since 1998.",
     hours: "Secret lunch: Mon–Sat 12pm–4pm", addedDate: "2026-05-13"
+  },
+
+  // ── BATCH 2: Timeout Boston + Boston Globe July 2025 + The Infatuation ──
+  {
+    id: 11, name: "El Peñol Restaurante", cat: "🫔",
+    dish: "Beef empanadas", price: 1.50,
+    neighborhood: "East Boston", lat: 42.3731, lng: -71.0227,
+    address: "54 Bennington St, East Boston",
+    score: 82, votes: 203, verified: true, verifyCount: 134,
+    tip: "Colombian family-run since 1998, prices barely changed. Beef empanada $1.50, chicken turnover $3.50, fried chicken in mushroom cream sauce for 3 people at $17. Blue Line to Orient Heights.",
+    hours: "Daily", addedDate: "2026-07-09"
+  },
+  {
+    id: 12, name: "Sullivan's Castle Island", cat: "🌭",
+    dish: "Chili cheese dog", price: 5.95,
+    neighborhood: "South Boston", lat: 42.3337, lng: -71.0027,
+    address: "2080 William J. Day Blvd, South Boston",
+    score: 79, votes: 188, verified: true, verifyCount: 112,
+    tip: "Boston institution since 1951. Ocean views, zero markup. Add chili and cheese — it's worth it. Hand-cut onion rings and soft-serve ice cream too. Summer lines are long but worth every minute.",
+    hours: "Seasonal — opens spring, check sullivanscastleisland.com", addedDate: "2025-07-09"
+  },
+  {
+    id: 13, name: "Evergreen Eatery + Café", cat: "☕",
+    dish: "Egg & cheese sandwich on English muffin", price: 4.75,
+    neighborhood: "Jamaica Plain", lat: 42.3138, lng: -71.1117,
+    address: "154 Green St, Jamaica Plain (near Green Street T)",
+    score: 74, votes: 156, verified: true, verifyCount: 89,
+    tip: "JP's best kept secret. Egg & cheese under $5 — beats the chains by a mile. Weekend splurge: Golden Avocado Toast ~$13. Biergarten patio, super chill vibe. Orange Line to Green Street.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 14, name: "Tasty Burger", cat: "🍔",
+    dish: "Classic burger (lettuce, tomato, pickles)", price: 6.65,
+    neighborhood: "Fenway", lat: 42.3456, lng: -71.1003,
+    address: "1301 Boylston St, Fenway",
+    score: 68, votes: 142, verified: true, verifyCount: 78,
+    tip: "Local Boston chain, not a national franchise. Late hours = perfect after Red Sox games. Add cheese for barely more. Turkey and veggie burgers available. Retro vibe, fast service.",
+    hours: "Daily until late", addedDate: "2025-07-09"
+  },
+  {
+    id: 15, name: "Anna's Taqueria", cat: "🌮",
+    dish: "Al pastor burrito", price: 8,
+    neighborhood: "Beacon Hill", lat: 42.3591, lng: -71.0697,
+    address: "242 Cambridge St, Beacon Hill (+ 6 other locations)",
+    score: 66, votes: 298, verified: true, verifyCount: 187,
+    tip: "Boston's beloved Mexican since 1995. 7 locations across the city. Al pastor = pork on a rotisserie with pineapple and onion. Massive portions, crazy fast. Get extra guac.",
+    hours: "Daily 10am–11pm", addedDate: "2025-07-09"
+  },
+  {
+    id: 16, name: "Los Paisanos Restaurant", cat: "🫔",
+    dish: "Pupusas (El Salvadoran corn cakes)", price: 3.99,
+    neighborhood: "Somerville", lat: 42.3860, lng: -71.0882,
+    address: "East Somerville (check Google Maps for exact address)",
+    score: 63, votes: 118, verified: true, verifyCount: 72,
+    tip: "Get 2 pupusas for ~$8 = a full meal. Best with shredded pork and cheese. Comes with salsa roja and curtido (fermented slaw). Also serves tamales, sopa de res, pork tortas. Cash preferred.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 17, name: "El Pelón Taqueria", cat: "🌮",
+    dish: "Rajas con queso (2 tacos)", price: 8.50,
+    neighborhood: "Fenway", lat: 42.3462, lng: -71.0981,
+    address: "92 Peterborough St, Fenway",
+    score: 61, votes: 134, verified: true, verifyCount: 81,
+    tip: "Fenway mainstay — packed before Red Sox games. Rajas con queso = black beans, roasted poblano chiles, Jack cheese in 2 tortillas. BYOB friendly. Fish tacos always fresh.",
+    hours: "Daily 11:30am–10pm", addedDate: "2025-07-09"
+  },
+  {
+    id: 18, name: "Effie's Kitchen", cat: "🥙",
+    dish: "Chicken souvlaki pita with fries", price: 8.50,
+    neighborhood: "Roslindale", lat: 42.2838, lng: -71.1332,
+    address: "1274 Centre St, Roslindale",
+    score: 58, votes: 97, verified: true, verifyCount: 61,
+    tip: "Family-run Greek in Roslindale. Tzatziki made fresh in-house. Pita stuffed with chicken, red onion, tomato, tzatziki and a side of fries included. Spinach pies also excellent.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 19, name: "Caffe Ducali", cat: "🫓",
+    dish: "Piadina flatbread sandwich (caprese or melanzane)", price: 9,
+    neighborhood: "North End", lat: 42.3643, lng: -71.0543,
+    address: "289 Causeway St area, North End",
+    score: 55, votes: 88, verified: true, verifyCount: 54,
+    tip: "LUNCH ONLY takeaway. Traditional Italian piadina from Emilia Romagna. Caprese (tomato, mozzarella, basil) or melanzane (grilled eggplant, roasted peppers, artichoke aioli, ricotta) — both $9.",
+    hours: "Lunch only — call ahead", addedDate: "2025-07-09"
+  },
+  {
+    id: 20, name: "Kelly's Roast Beef", cat: "🥩",
+    dish: "North Shore roast beef sandwich", price: 9.50,
+    neighborhood: "Revere", lat: 42.4089, lng: -70.9928,
+    address: "410 Revere Beach Blvd, Revere Beach",
+    score: 53, votes: 211, verified: true, verifyCount: 143,
+    tip: "Open since 1951. THE original North Shore roast beef. Top it with mayo, BBQ sauce and cheese for the full 'threeway.' Lobster rolls and clam chowder too. Worth the Blue Line trip to Revere Beach.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 21, name: "Rondo's Sub Shop", cat: "🥪",
+    dish: "Steak & cheese sub", price: 9.95,
+    neighborhood: "South Boston", lat: 42.3378, lng: -71.0521,
+    address: "South Boston (check Google Maps)",
+    score: 50, votes: 133, verified: true, verifyCount: 79,
+    tip: "Southie institution with generations of loyal fans. Massive sub, fast service. Steak bomb with cheese + mayo is the move. Have your order ready — lunchtime line moves fast.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 22, name: "Chicken & Rice Guys", cat: "🍗",
+    dish: "Halal chicken plate (chicken + rice + pita + salad)", price: 10.49,
+    neighborhood: "Downtown", lat: 42.3555, lng: -71.0596,
+    address: "Multiple Downtown locations + food trucks",
+    score: 48, votes: 176, verified: true, verifyCount: 98,
+    tip: "Boston halal street food done right. Plate includes well-seasoned grilled chicken, rice, pita, salad, choice of sauce (white sauce is the secret weapon). Multiple brick-and-mortar locations + trucks.",
+    hours: "Daily lunch + dinner", addedDate: "2025-07-09"
+  },
+  {
+    id: 23, name: "Fasika Cafe", cat: "🍲",
+    dish: "Beef tibs sub", price: 10.50,
+    neighborhood: "Roxbury", lat: 42.3300, lng: -71.0853,
+    address: "Roxbury (check Google Maps for current address)",
+    score: 46, votes: 87, verified: true, verifyCount: 52,
+    tip: "Best Ethiopian in Roxbury. Beef tibs sub = sautéed beef with onions, green peppers, punched up with aromatic spices in a sandwich. Also serves traditional injera plates. Hidden gem.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 24, name: "Saloniki", cat: "🥙",
+    dish: "Zucchini fritters pita (vegetarian)", price: 10.59,
+    neighborhood: "Fenway", lat: 42.3440, lng: -71.0993,
+    address: "4 Kilmarnock St, Fenway",
+    score: 44, votes: 98, verified: true, verifyCount: 59,
+    tip: "Farm-to-table Greek fast casual. Zucchini-feta fritters + greens + tomato + onion + herbs + fries + garlic yogurt + secret sauce in a pita — all for $10.59. Also in Harvard Square.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 25, name: "Buenas", cat: "🫔",
+    dish: "3 empanadas + ensalada roja (weekday lunch deal)", price: 11.11,
+    neighborhood: "Somerville", lat: 42.3950, lng: -71.1003,
+    address: "1 Bow Market Way Unit 14, Somerville",
+    score: 42, votes: 91, verified: true, verifyCount: 54,
+    tip: "Argentinian-American empanadas with wild creativity. Classic ground beef + onion, or try Frito pie, chicken & waffles, Cinnamon Toast Crunch. Weekday lunch deal: 3 empanadas + salad = $11.11.",
+    hours: "Weekday lunch deal only", addedDate: "2025-07-09"
+  },
+  {
+    id: 26, name: "Flavor Boom!", cat: "🍱",
+    dish: "World-flavored rice carton (Indonesian, Thai, Moroccan)", price: 11,
+    neighborhood: "Downtown", lat: 42.3567, lng: -71.0567,
+    address: "155 Milk St, Downtown (+ Jamaica Plain, Kendall Sq, Watertown)",
+    score: 40, votes: 78, verified: true, verifyCount: 45,
+    tip: "Fast-casual bowls inspired by the owner's global travels. Beef rendang, shrimp curry, Moroccan eggplant & chickpeas. One carton = a full meal for ~$11. Also in Jamaica Plain and Kendall Square.",
+    hours: "Daily lunch + dinner", addedDate: "2025-07-09"
+  },
+  {
+    id: 27, name: "anoush'ella", cat: "🥙",
+    dish: "Halloumi or kofta bowl on toasted couscous", price: 10,
+    neighborhood: "South End", lat: 42.3415, lng: -71.0770,
+    address: "35 West Newton St, South End (+ other locations)",
+    score: 38, votes: 112, verified: true, verifyCount: 68,
+    tip: "Armenian-Lebanese fast casual, stunning food for under $10. Griddled flatbread made right in front of you. The labne bar with sweet/savory toppings is the highlight. Multiple locations across Boston.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 28, name: "Bova's Bakery", cat: "🫓",
+    dish: "Half-calzone (chicken parm, sausage+pepper, spinach+cheese)", price: 12,
+    neighborhood: "North End", lat: 42.3641, lng: -71.0542,
+    address: "134 Salem St, North End",
+    score: 36, votes: 89, verified: true, verifyCount: 51,
+    tip: "24-HOUR BAKERY. Half-calzone = two meals minimum, golden glistening crust. $12 in person only. Also: Sicilian slices and arancini the size of a fist. Best late-night North End option.",
+    hours: "24 hours, 7 days", addedDate: "2025-07-09"
+  },
+  {
+    id: 29, name: "Sapporo Ramen", cat: "🍜",
+    dish: "House ramen (pork, egg, beansprouts, nori, corn)", price: 14,
+    neighborhood: "Cambridge", lat: 42.3876, lng: -71.1189,
+    address: "Porter Exchange, 1815 Massachusetts Ave, Cambridge",
+    score: 34, votes: 167, verified: true, verifyCount: 97,
+    tip: "Line down the block most nights — worth it. Big bowl, thick broth, generous toppings. House ramen $14, spicy miso $14.50. Small spot inside Porter Exchange — go early or expect a wait.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 30, name: "Mi Pueblito Restaurant", cat: "🫔",
+    dish: "Cheese & loroco pupusa (Salvadoran)", price: 4,
+    neighborhood: "East Boston", lat: 42.3729, lng: -71.0164,
+    address: "333 Border St, East Boston (+ one other location)",
+    score: 32, votes: 76, verified: true, verifyCount: 44,
+    tip: "Mexican, Guatemalan AND Salvadoran all in one kitchen. The loroco pupusa (edible flower filling) has an intoxicating aroma. Also: chiles rellenos, fajitas, breakfast. Blue Line to Airport or Wood Island.",
+    hours: "Daily including breakfast", addedDate: "2025-07-09"
+  },
+  {
+    id: 31, name: "Dumpling House", cat: "🥟",
+    dish: "Steamed soup dumplings + braised eggplant (share)", price: 12,
+    neighborhood: "Cambridge", lat: 42.3715, lng: -71.1164,
+    address: "950 Massachusetts Ave, Cambridge",
+    score: 30, votes: 143, verified: true, verifyCount: 84,
+    tip: "Bring a group — meant for sharing. Staff are lightning fast. Order: soup dumplings, braised eggplant, Szechuan crispy spicy chicken. Menu is huge — takes months to explore. Always packed.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 32, name: "Gyro City", cat: "🥙",
+    dish: "Classic pork or chicken gyro with fries", price: 10,
+    neighborhood: "Brighton", lat: 42.3474, lng: -71.1543,
+    address: "183 Chestnut Hill Ave, Brighton",
+    score: 28, votes: 67, verified: true, verifyCount: 39,
+    tip: "Best gyros in Boston — huge portions, crispy fries inside the wrap. Pork with tzatziki or chicken with mustard sauce. Also: Greek salad, souvlaki, spanakopita. Brighton underrated gem.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 33, name: "Hei La Moon", cat: "🥟",
+    dish: "Dim sum (carts — per dish from ~$5)", price: 5,
+    neighborhood: "Chinatown", lat: 42.3519, lng: -71.0590,
+    address: "88 Beach St, Chinatown",
+    score: 26, votes: 198, verified: true, verifyCount: 121,
+    tip: "Go for weekend dim sum brunch. Cart service — point at what you want. Aim for texture variety: dumplings + rice noodles + turnip cake. Get there before noon or expect a wait. $5–8/dish.",
+    hours: "Daily dim sum 8am–3pm, dinner nightly", addedDate: "2025-07-09"
+  },
+  {
+    id: 34, name: "Pho Viet's", cat: "🍜",
+    dish: "Pho or banh mi", price: 12,
+    neighborhood: "Brookline", lat: 42.3508, lng: -71.1265,
+    address: "1022 Commonwealth Ave, Brookline (near BU)",
+    score: 24, votes: 88, verified: true, verifyCount: 51,
+    tip: "Originally at Super 88 food court near BU — now its own spot. Still Tran family-run, still counter service, still fast. Vietnamese-Chinese-Thai menu. Great banh mi and fresh spring rolls in summer.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 35, name: "Jahunger", cat: "🍜",
+    dish: "Jahunger hand-pulled noodles (Uyghur)", price: 13,
+    neighborhood: "Cambridge", lat: 42.3604, lng: -71.1153,
+    address: "Cambridgeport (check theinfatuation.com/boston/reviews/jahunger)",
+    score: 22, votes: 76, verified: true, verifyCount: 43,
+    tip: "Uyghur food — rare in Boston and absolutely worth seeking out. Namesake noodles have legions of devoted fans. Hand-pulled, chewy, with bold spicing. One of the most unique cheap eats in the city.",
+    hours: "Check hours — sometimes closes early", addedDate: "2025-07-09"
+  },
+  {
+    id: 36, name: "Dakzen", cat: "🍜",
+    dish: "Thai street noodles", price: 11,
+    neighborhood: "Somerville", lat: 42.3961, lng: -71.1225,
+    address: "Davis Square, Somerville",
+    score: 20, votes: 64, verified: true, verifyCount: 37,
+    tip: "Counter-service Thai in Davis Square that punches way above its price. Street noodle recipes straight from Thailand. Quick, no-fuss, consistently great. Red Line to Davis.",
+    hours: "Daily", addedDate: "2025-07-09"
+  },
+  {
+    id: 37, name: "Dragon Pizza", cat: "🍕",
+    dish: "Pizza slice", price: 4,
+    neighborhood: "Somerville", lat: 42.3959, lng: -71.1233,
+    address: "Davis Square, Somerville",
+    score: 19, votes: 54, verified: true, verifyCount: 32,
+    tip: "Great slice joint in Davis Square. Classic NY-style slices at Boston-friendly prices. No frills, just solid pizza. Good for a quick grab between Red Line stops.",
+    hours: "Daily until late", addedDate: "2025-07-09"
+  },
+  {
+    id: 38, name: "Archie's New York Deli", cat: "🍳",
+    dish: "Egg sandwich (one of the few left under $10 in Downtown)", price: 8,
+    neighborhood: "Downtown", lat: 42.3557, lng: -71.0610,
+    address: "Downtown Crossing area",
+    score: 18, votes: 48, verified: true, verifyCount: 28,
+    tip: "Rare Downtown diner holdout. Egg sandwich under $10 in 2026 — increasingly hard to find. Yahoo sandwich (their house special) is the crowd favorite. Old-school counter seating.",
+    hours: "Weekdays — breakfast/lunch only", addedDate: "2025-07-09"
+  },
+  {
+    id: 39, name: "Shanti", cat: "🍛",
+    dish: "Biryani, vindaloo, or tandoori chicken", price: 14,
+    neighborhood: "Dorchester", lat: 42.3002, lng: -71.0700,
+    address: "1111 Dorchester Ave, Dorchester (+ Roslindale location)",
+    score: 17, votes: 43, verified: true, verifyCount: 26,
+    tip: "Intimate Indian/Bangladeshi spot serving Savin Hill since 25+ years. Quiet, cozy — great date night. Aromatic biryani, red-hot vindaloo, smoky tandoori. Budget-friendly mains ~$14. Also in Roslindale.",
+    hours: "Daily dinner, lunch weekdays", addedDate: "2025-07-09"
+  },
+  {
+    id: 40, name: "Sofra Bakery & Cafe", cat: "🥙",
+    dish: "Mezze plate / flatbread with labne and dips", price: 10,
+    neighborhood: "Cambridge", lat: 42.3730, lng: -71.1450,
+    address: "1 Belmont St, West Cambridge",
+    score: 16, votes: 134, verified: true, verifyCount: 78,
+    tip: "Ana Sortun's legendary Mediterranean counter cafe. Incredible mezze, flatbreads, pastries. Rated 8.2/10 by The Infatuation. Go early — the good stuff sells out. Pricier pastries but savory items are a deal.",
+    hours: "Daily 8am–6pm", addedDate: "2025-07-09"
   }
 ];
 
@@ -1587,25 +1873,32 @@ function submitSpot() {
 
   // Neighborhood → approximate coords (Boston center as fallback, jittered)
   const NEIGH_COORDS = {
-    'North End':   [42.3647, -71.0542],
-    'Downtown':    [42.3583, -71.0567],
-    'Cambridge':   [42.3736, -71.1003],
+    'North End':    [42.3647, -71.0542],
+    'Downtown':     [42.3583, -71.0567],
+    'Cambridge':    [42.3736, -71.1003],
     'Jamaica Plain':[42.3138, -71.1147],
-    'Dorchester':  [42.3072, -71.0700],
-    'Roxbury':     [42.3285, -71.0838],
-    'Brookline':   [42.3395, -71.1218],
-    'Hyde Park':   [42.2563, -71.1232],
-    'Quincy':      [42.2529, -71.0025],
-    'Bay Village': [42.3492, -71.0688],
-    'Allston':     [42.3534, -71.1298],
-    'Chinatown':   [42.3519, -71.0624],
-    'Mission Hill':[42.3336, -71.0998],
-    'Fenway':      [42.3456, -71.1003],
-    'Back Bay':    [42.3491, -71.0834],
-    'South End':   [42.3394, -71.0787],
-    'East Boston': [42.3681, -71.0396],
-    'Somerville':  [42.3876, -71.0995],
-    'Other':       [42.3601, -71.0589]
+    'Dorchester':   [42.3072, -71.0700],
+    'Roxbury':      [42.3285, -71.0838],
+    'Brookline':    [42.3395, -71.1218],
+    'Hyde Park':    [42.2563, -71.1232],
+    'Quincy':       [42.2529, -71.0025],
+    'Bay Village':  [42.3492, -71.0688],
+    'Allston':      [42.3534, -71.1298],
+    'Chinatown':    [42.3519, -71.0624],
+    'Mission Hill': [42.3336, -71.0998],
+    'Fenway':       [42.3456, -71.1003],
+    'Back Bay':     [42.3491, -71.0834],
+    'South End':    [42.3394, -71.0787],
+    'East Boston':  [42.3681, -71.0396],
+    'Somerville':   [42.3876, -71.0995],
+    'South Boston': [42.3378, -71.0476],
+    'Brighton':     [42.3474, -71.1543],
+    'Roslindale':   [42.2838, -71.1332],
+    'Revere':       [42.4089, -70.9928],
+    'Beacon Hill':  [42.3591, -71.0697],
+    'Charlestown':  [42.3780, -71.0603],
+    'Seaport':      [42.3511, -71.0466],
+    'Other':        [42.3601, -71.0589]
   };
   const [baseLat, baseLng] = NEIGH_COORDS[neigh] || [42.3601, -71.0589];
   const lat = baseLat + (Math.random() - 0.5) * 0.008;
