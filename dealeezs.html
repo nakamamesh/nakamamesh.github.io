@@ -1,4 +1,4 @@
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -953,6 +953,7 @@
       <div class="neigh-tab" onclick="filterNeigh('Roslindale', this)">Roslindale</div>
       <div class="neigh-tab" onclick="filterNeigh('Revere', this)">Revere</div>
       <div class="neigh-tab" onclick="filterNeigh('Hyde Park', this)">Hyde Park</div>
+      <div class="neigh-tab" onclick="filterNeigh('Mattapan', this)">Mattapan</div>
       <div class="neigh-tab" onclick="filterNeigh('Quincy', this)">Quincy</div>
     </div>
 
@@ -1079,6 +1080,7 @@
             <option>Fenway</option>
             <option>Hyde Park</option>
             <option>Jamaica Plain</option>
+            <option>Mattapan</option>
             <option>Mission Hill</option>
             <option>North End</option>
             <option>Quincy</option>
@@ -1218,6 +1220,188 @@ const SEED_SPOTS = [
     score: 44, votes: 76, verified: true, verifyCount: 48,
     tip: "⚠️ ORDER ONLINE ONLY. Available Mon–Sat noon–4pm. Includes veggie entrée (chickpea curry, dal, or veg curry) + rice or naan. Cash only at counter for regular menu. Serving no-frills Indian since 1998.",
     hours: "Secret lunch: Mon–Sat 12pm–4pm", addedDate: "2026-05-13"
+  },
+
+  // ── BATCH 3: WBUR Oct 2025 + SachaEats Feb 2025 + HiddenBoston ──
+  {
+    id: 41, name: "163 Vietnamese Sandwich", cat: "🥖",
+    dish: "Chicken curry bánh mì sandwich", price: 6.50,
+    neighborhood: "Chinatown", lat: 42.3505, lng: -71.0617,
+    address: "163 area, Chinatown (near Essex St)",
+    score: 91, votes: 187, verified: true, verifyCount: 119,
+    tip: "WBUR Oct 2025: TikToker Dylan Bloomfield called this 'the finest cuisine I've found for under $7 in Boston.' Hole-in-the-wall, giant sandwich, incredibly aromatic chicken curry filling. Chinatown is the best neighborhood for fast cheap food — this is Exhibit A.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 42, name: "Dumpling King", cat: "🥟",
+    dish: "10 pan-fried pork OR leek dumplings", price: 6,
+    neighborhood: "Chinatown", lat: 42.3507, lng: -71.0618,
+    address: "42 Beach St (Beach Street Food Court), Chinatown",
+    score: 88, votes: 243, verified: true, verifyCount: 158,
+    tip: "10 dumplings for $6 — thick chewy wrapping, generous seasoned pork inside. Cash only. The food court is tiny so best as takeout. Also sells frozen bundles to cook at home. Go with the pork.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 43, name: "Ho Yuen Bakery", cat: "☕",
+    dish: "Pork bun, pineapple bun, or beef curry pastry", price: 2.50,
+    neighborhood: "Chinatown", lat: 42.3508, lng: -71.0621,
+    address: "67 Beach St, Chinatown",
+    score: 82, votes: 198, verified: true, verifyCount: 127,
+    tip: "Freshly baked Chinese pastries every morning from $1–5. The beef curry pastry is the must-order. Pineapple bun has NO pineapple — just a sugar-crusted top. Perfect cheap breakfast before work.",
+    hours: "Daily — go early, best stuff sells out by noon", addedDate: "2025-10-03"
+  },
+  {
+    id: 44, name: "Susu Gourmet", cat: "🍙",
+    dish: "Cantonese steamed rice rolls (cheung fun)", price: 5,
+    neighborhood: "Chinatown", lat: 42.3497, lng: -71.0624,
+    address: "70 Tyler St, Chinatown",
+    score: 76, votes: 134, verified: true, verifyCount: 86,
+    tip: "Silky, chewy Cantonese rice rolls for $4–7/order. Fillings: roast pork, beef, shrimp, or veggies, finished with a soy sauce glaze. Similar vibe to Rubato in Quincy but right in Chinatown. Underrated gem.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 45, name: "Tenoch Mexican", cat: "🌮",
+    dish: "Street-style tacos (asada con queso, al pastor, carnitas)", price: 3.50,
+    neighborhood: "Downtown", lat: 42.3601, lng: -71.0538,
+    address: "3 Lewis St, Faneuil Hall area, Downtown",
+    score: 79, votes: 211, verified: true, verifyCount: 134,
+    tip: "Authentic street-food style tacos $3–4 each, cash-friendly, fast. Asada con queso (steak + cheese) is the move. Doubles as a solid late-night spot near Faneuil Hall. Family-owned, not a chain.",
+    hours: "Daily including late", addedDate: "2025-10-03"
+  },
+  {
+    id: 46, name: "Florina Pizza", cat: "🍕",
+    dish: "Buffalo chicken or cheese pizza slice", price: 4,
+    neighborhood: "Beacon Hill", lat: 42.3593, lng: -71.0677,
+    address: "16 Derne St, Beacon Hill",
+    score: 75, votes: 167, verified: true, verifyCount: 104,
+    tip: "Hidden gem tucked on a residential corner in Beacon Hill. Slices $3–5 and HUGE — one is enough for a moderately hungry person. Buffalo chicken only available some days. Hip-hop on the speakers, chill staff.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 47, name: "Saus", cat: "🍟",
+    dish: "Belgian fries with dipping sauce (23 sauces to choose from)", price: 7,
+    neighborhood: "Downtown", lat: 42.3600, lng: -71.0566,
+    address: "33 Union St, near Faneuil Hall, Downtown",
+    score: 72, votes: 188, verified: true, verifyCount: 116,
+    tip: "Boston's only Belgian fries + poutine spot. Fries $6–8, poutine ~$8. Ask for 'Secret Saus' (Thousand Island ranch hybrid). Over 23 sauces — garlic-herb, bacon-parm, truffle ketchup. Split poutine with a friend.",
+    hours: "Daily until late", addedDate: "2025-10-03"
+  },
+  {
+    id: 48, name: "Ernesto's Pizzeria", cat: "🍕",
+    dish: "\"Boston's Biggest Slice\" — 2-slice New York-style portion", price: 7.50,
+    neighborhood: "North End", lat: 42.3638, lng: -71.0547,
+    address: "69 Salem St, North End",
+    score: 69, votes: 156, verified: true, verifyCount: 97,
+    tip: "$7.50 gets you TWO slices — they just call it one. Thin-crust, foldable, generously topped. BBQ chicken is the crowd favorite. Close to the Rose Kennedy Greenway for outdoor eating in summer.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 49, name: "Mana Escondido", cat: "🍌",
+    dish: "Tripleta sandwich on crispy fried plantain buns (set of 2)", price: 9,
+    neighborhood: "South End", lat: 42.3394, lng: -71.0826,
+    address: "68 Aguadilla St, South End",
+    score: 66, votes: 143, verified: true, verifyCount: 89,
+    tip: "Authentic Puerto Rican spot hidden in the South End. Tripleta = chicken + roast pork + steak + cheese + lettuce + pickles + tomatoes + cream sauce, inside CRISPY FRIED PLANTAIN BUNS. Wild and delicious.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 50, name: "North End Fish Market", cat: "🍣",
+    dish: "Spicy tuna roll (8 pieces)", price: 6.90,
+    neighborhood: "North End", lat: 42.3639, lng: -71.0551,
+    address: "99 Salem St, North End",
+    score: 62, votes: 87, verified: true, verifyCount: 52,
+    tip: "The last place you'd expect sushi in Boston — a fishmonger in the North End. Takeout only, made fresh in minutes. 8-piece rolls $6–8. Great quality fish from a market that actually moves product daily.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 51, name: "Pikalo Empanadas", cat: "🫔",
+    dish: "Creative empanadas (buffalo chicken, Hawaiian pizza, burger, beef)", price: 5,
+    neighborhood: "East Boston", lat: 42.3673, lng: -71.0403,
+    address: "East Boston + Jamaica Plain locations",
+    score: 58, votes: 112, verified: true, verifyCount: 69,
+    tip: "Classic beef + wild creative flavors like Hawaiian pizza empanada, burger empanada, even strawberry-nutella dessert empanada. $4–8 each. Blue Line to Maverick for East Boston location.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 52, name: "Pizzeria Rustico", cat: "🥖",
+    dish: "Italian sub (meatball, chicken parm, Italian, Caprese) — from $9", price: 9,
+    neighborhood: "Downtown", lat: 42.3629, lng: -71.0634,
+    address: "85 Canal St, West End/North Station area",
+    score: 55, votes: 98, verified: true, verifyCount: 60,
+    tip: "A rare affordable Italian sub in Boston — most are $18+ now. Basic subs $9, the 'Bidabeep' (chicken cutlet + prosciutto + fresh mozz + pesto + roasted peppers) is $12 and worth every penny. Homemade basil pesto.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 53, name: "Zo Greek", cat: "🥙",
+    dish: "Authentic pork gyro pita (off-the-spit)", price: 9.50,
+    neighborhood: "Downtown", lat: 42.3597, lng: -71.0580,
+    address: "Multiple: Downtown, State Street, Assembly Row (Somerville)",
+    score: 52, votes: 134, verified: true, verifyCount: 82,
+    tip: "Pork off-the-spit in a pita with tzatziki and veggies. Gyros $9.50–$12.50. Multiple Downtown locations make it easy to grab on a work lunch. Assembly Row location has outdoor seating.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 54, name: "Mangia Mangia", cat: "🥖",
+    dish: "Chicken cutlet parmigiana sub ($9 Mondays, $11 other days)", price: 9,
+    neighborhood: "North End", lat: 42.3641, lng: -71.0539,
+    address: "147 Endicott St, North End",
+    score: 49, votes: 88, verified: true, verifyCount: 53,
+    tip: "North End locals fill this place — always a good sign. Crispy chicken cutlet + marinara + sliced provolone. **GO ON MONDAY** for the $9 discount. Daily specials on different sandwiches throughout the week.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 55, name: "Cactus Grill", cat: "🫔",
+    dish: "Pupusas (Salvadoran corn cakes, pork/cheese/bean fillings)", price: 4,
+    neighborhood: "East Boston", lat: 42.3680, lng: -71.0413,
+    address: "44 Maverick Square, East Boston",
+    score: 46, votes: 97, verified: true, verifyCount: 59,
+    tip: "Right at Maverick Station on the Blue Line — zero excuses not to go. $4 pupusas served with tomato-based sauce and pickled curtido. Also: sopa de res, tamales, tacos. Cash preferred.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 56, name: "Parziale's Bakery", cat: "🍕",
+    dish: "Pizza slices + Italian pastries", price: 3,
+    neighborhood: "North End", lat: 42.3647, lng: -71.0539,
+    address: "80 Prince St, North End",
+    score: 43, votes: 76, verified: true, verifyCount: 46,
+    tip: "Old-school North End bakery that still charges old-school prices. Pizza slices from ~$3, Italian pastries and bread too. Family-run for generations. Great alternative when Galleria Umberto sells out.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 57, name: "Villa Mexico Café", cat: "🌮",
+    dish: "Tacos, burritos, quesadillas", price: 8,
+    neighborhood: "Downtown", lat: 42.3594, lng: -71.0495,
+    address: "121 Water St, Downtown Waterfront",
+    score: 40, votes: 67, verified: true, verifyCount: 40,
+    tip: "Tiny counter-service gem near the Waterfront. Solid tacos and burritos that punch well above their price. Quick lunch spot for Financial District workers who want something better than Chipotle.",
+    hours: "Weekdays lunch + dinner", addedDate: "2025-10-03"
+  },
+  {
+    id: 58, name: "Spinelli's Pasta & Pastry", cat: "🍝",
+    dish: "Fresh pasta dishes + Italian pastries", price: 9,
+    neighborhood: "East Boston", lat: 42.3731, lng: -71.0253,
+    address: "282 Bennington St, East Boston",
+    score: 37, votes: 58, verified: true, verifyCount: 34,
+    tip: "East Boston Italian institution — homemade pasta, pastries and bread at prices that haven't caught up with inflation. Worth the Blue Line trip. Neighborhood locals have been coming here for decades.",
+    hours: "Daily", addedDate: "2025-10-03"
+  },
+  {
+    id: 59, name: "Simco's on the Bridge", cat: "🌭",
+    dish: "Hot dogs and burgers, Mattapan-style", price: 4,
+    neighborhood: "Mattapan", lat: 42.2787, lng: -71.0969,
+    address: "1509 Blue Hill Ave, Mattapan",
+    score: 34, votes: 54, verified: true, verifyCount: 32,
+    tip: "Boston institution since the 1930s, sitting on the Mattapan bridge. Classic American hot dogs and burgers at classic prices. Seasonal outdoor operation. HiddenBoston staple — the kind of spot that defines a neighborhood.",
+    hours: "Seasonal — spring through fall", addedDate: "2025-10-03"
+  },
+  {
+    id: 60, name: "Machu Chicken", cat: "🍗",
+    dish: "Pollo a la Brasa (charcoal-grilled Peruvian rotisserie chicken)", price: 12,
+    neighborhood: "Somerville", lat: 42.3950, lng: -71.1003,
+    address: "Somerville (check Google Maps for current address)",
+    score: 31, votes: 61, verified: true, verifyCount: 37,
+    tip: "Family-owned, using native Peruvian ingredients. Charcoal-grilled chicken described as 'an absolute steal' — crispy skin, juicy interior, served with aji verde sauce. Red Line to Davis or Porter.",
+    hours: "Daily", addedDate: "2025-10-03"
   },
 
   // ── BATCH 2: Timeout Boston + Boston Globe July 2025 + The Infatuation ──
@@ -1898,6 +2082,8 @@ function submitSpot() {
     'Beacon Hill':  [42.3591, -71.0697],
     'Charlestown':  [42.3780, -71.0603],
     'Seaport':      [42.3511, -71.0466],
+    'Mattapan':     [42.2787, -71.0969],
+    'West End':     [42.3629, -71.0634],
     'Other':        [42.3601, -71.0589]
   };
   const [baseLat, baseLng] = NEIGH_COORDS[neigh] || [42.3601, -71.0589];
